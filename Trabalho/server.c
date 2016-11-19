@@ -24,10 +24,11 @@ int main(int argc, char *argv[])
         cli_fd = open(cli_pipe_name, O_WRONLY|O_CREAT, 0600);
 
         while (fscanf(f_log, "%s %s", tmp_usr, tmp_pss) == 2) {
-            if (!strcmp(tmp_usr, cli_log.usr) && !strcmp(tmp_pss, cli_log.pss))
+            if (!strcmp(tmp_usr, cli_log.usr) && !strcmp(tmp_pss, cli_log.pss)){
                 sprintf(cli_log.auth_buffer, "ACCESS GRANTED");
-            else
-            sprintf(cli_log.auth_buffer, "ACCESS DENIED");
+                break;
+            } else
+                sprintf(cli_log.auth_buffer, "ACCESS DENIED");
         }
 
         printf("%s\n", cli_log.auth_buffer);
