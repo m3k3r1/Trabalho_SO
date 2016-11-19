@@ -3,7 +3,6 @@
 int main(int argc, char const *argv[]) {
     int srv_fd, cli_fd;
     char cli_pipe_name[20];
-    bool log_auth = false;
     login_t cli_log;
     cli_info_t cli_data;
 
@@ -18,7 +17,6 @@ int main(int argc, char const *argv[]) {
     mkfifo(SRV_FIFO, 0600);
     cli_fd = open(cli_pipe_name,  O_RDWR);
 
-
     printf ("[USERNAME] : ");
     fgets (cli_log.usr, sizeof(cli_log.usr), stdin);
     strtok (cli_log.usr, "\n");
@@ -32,11 +30,13 @@ int main(int argc, char const *argv[]) {
     write(srv_fd, &cli_data, sizeof(cli_data));
     write(srv_fd, &cli_log, sizeof(cli_log));
 
-    read(cli_fd, &log_auth, sizeof(log_auth));
-
+    //not receiving auth_buffer corrrectly
+    read(cli_fd, &cli_log, sizeof(cli_log));
+    printf("%s\n", cli_log.auth_buffer );
 
     close(cli_fd);
     close(srv_fd);
-    unlink(CLI_FIFO);
+    unlink(cli_pipe_name);
+    unlink(SRV_FIFO);
     exit(0);
 }

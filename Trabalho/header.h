@@ -8,13 +8,14 @@
 #include <string.h>
 #include <unistd.h>
 
-#define LOGS_FILE "/res/cli_login.txt"
+#define LOGS_FILE "cli_login.txt"
 #define SRV_FIFO "server_fifo"
 #define CLI_FIFO "client_%d_fifo"
 
 typedef struct {
     char usr[20];
     char pss[20];
+    char auth_buffer[20];
 } login_t;
 
 typedef struct {
