@@ -15,7 +15,7 @@
 typedef struct {
     char usr[20];
     char pss[20];
-    char auth_buffer[20];
+    bool auth;
 } login_t;
 
 typedef struct {

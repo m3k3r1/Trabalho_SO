@@ -30,9 +30,8 @@ int main(int argc, char const *argv[]) {
     write(srv_fd, &cli_data, sizeof(cli_data));
     write(srv_fd, &cli_log, sizeof(cli_log));
 
-    //not receiving auth_buffer corrrectly
-    read(cli_fd, &cli_log, sizeof(cli_log));
-    printf("%s\n", cli_log.auth_buffer );
+    read(cli_fd, &cli_log.auth, sizeof(cli_log.auth));
+    printf("%s\n", cli_log.auth ? "[LOGIN SUCCESFULL]" : "[LOGIN FAILED]");
 
     close(cli_fd);
     close(srv_fd);
