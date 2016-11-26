@@ -8,15 +8,8 @@
 #include <string.h>
 #include <unistd.h>
 
-#define LOGS_FILE "res/cli_login.txt"
 #define SRV_FIFO "res/server_fifo"
 #define CLI_FIFO "res/client_%d_fifo"
-
-typedef struct {
-    char usr[20];
-    char pss[20];
-    bool auth;
-} login_t;
 
 typedef struct {
     int pid;

@@ -1,4 +1,5 @@
 #include "base.h"
+#include "usr_mgmt.h"
 
 int main(int argc, char const *argv[]) {
     int srv_fd, cli_fd;
@@ -18,13 +19,7 @@ int main(int argc, char const *argv[]) {
     cli_fd = open(cli_pipe_name,  O_RDWR);
 
 do {
-    printf ("[USERNAME] : ");
-    fgets (cli_log.usr, sizeof(cli_log.usr), stdin);
-    strtok (cli_log.usr, "\n");
-    fflush (stdin);
-    printf ("[PASSWORD] : ");
-    fgets (cli_log.pss, sizeof(cli_log.pss), stdin);
-    strtok (cli_log.pss, "\n");
+    set_crd( cli_log.usr, cli_log.pss);
 
     write(srv_fd, &cli_data, sizeof(cli_data));
     write(srv_fd, &cli_log, sizeof(cli_log));

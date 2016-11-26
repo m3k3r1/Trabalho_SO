@@ -18,7 +18,7 @@ $(ODIR)/%.o: $(SRC)/%.c $(DEPS)
 all: server client
 
 server : $(OBJ)
-	$(CC) -o  $@ $(SRC)/server.c $(CFLAGS)
+	$(CC) -o  $@ $(SRC)/server.c $(SRC)/usr_mgmt.c $(CFLAGS)
 
 client : $(OBJ)
-	$(CC) -o  $@ $(SRC)/client.c $(CFLAGS)
+	$(CC) -o  $@ $(SRC)/client.c $(SRC)/usr_mgmt.c $(CFLAGS)
