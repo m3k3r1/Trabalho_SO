@@ -7,11 +7,12 @@ int main(int argc, char *argv[])
     char cli_pipe_name[20];
     login_t cli_log;
     cli_info_t cli_data;
+    player_t* player_list;
 
     mkfifo(SRV_FIFO , 0600);
     srv_fd = open(SRV_FIFO, O_RDWR);
 
-    do {
+    while( true ) {
         read(srv_fd, &cli_data, sizeof(cli_data));
         read(srv_fd, &cli_log, sizeof(cli_log));
         printf("%s-%s", cli_log.usr, cli_log.pss );
@@ -20,9 +21,15 @@ int main(int argc, char *argv[])
         cli_fd = open(cli_pipe_name, O_WRONLY|O_CREAT, 0600);
 
         cli_log.auth = usr_auth(cli_log.usr, cli_log.pss);
+
+        if (cli_log.auth)
+            save_player(&player_list ,cli_log.usr, cli_data.pid);
+
         printf("%s\n", cli_log.auth ? "[LOGIN SUCCESFULL]" : "[LOGIN FAILED]");
         write(cli_fd, &cli_log.auth, sizeof(cli_log.auth));
-    } while( !cli_log.auth  );
+
+
+    }
 
     close(cli_fd);
     close(srv_fd);

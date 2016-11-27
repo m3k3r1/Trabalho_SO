@@ -26,3 +26,31 @@ bool usr_auth(char usr[20], char pss[20]){
     fclose(f_log);
     return false;
 };
+
+void save_player(player_t** head, char usr[20], int pid){
+    if (head) {
+        if (!(*head = malloc(sizeof(player_t)))) {
+            perror("[MEMORY_ERROR]Can't alocate new node");
+            return;
+        }
+    }else{
+        while (*head)
+            head = &(*head)->nxt_player;
+        *head = add_player(usr, pid);
+    }
+}
+
+player_t* add_player( char usr[20], int pid){
+    player_t *tmp;
+
+    if (!(tmp = malloc(sizeof(player_t)))) {
+        perror("[MEMORY_ERROR]Can't alocate new node");
+        return NULL;
+    }
+
+    strcpy(tmp->usr_name ,usr);
+    tmp->pid = pid;
+    tmp->nxt_player = NULL;
+
+    return tmp;
+}

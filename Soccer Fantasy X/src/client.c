@@ -8,7 +8,7 @@ int main(int argc, char const *argv[]) {
     cli_info_t cli_data;
 
     if( access(SRV_FIFO, F_OK) ){
-        printf("Não existe o pipe %s\n", SRV_FIFO );
+        perror("[ERROR]Server not found \n");
         exit(1);
     }else
         srv_fd = open(SRV_FIFO, O_WRONLY|O_CREAT, 0600);
@@ -18,16 +18,20 @@ int main(int argc, char const *argv[]) {
     mkfifo(cli_pipe_name, 0600);
     cli_fd = open(cli_pipe_name,  O_RDWR);
 
-do {
-    set_crd( cli_log.usr, cli_log.pss);
+    while(true) {
+        set_crd( cli_log.usr, cli_log.pss);
 
-    write(srv_fd, &cli_data, sizeof(cli_data));
-    write(srv_fd, &cli_log, sizeof(cli_log));
+        write(srv_fd, &cli_data, sizeof(cli_data));
+        write(srv_fd, &cli_log, sizeof(cli_log));
 
-    read(cli_fd, &cli_log.auth, sizeof(cli_log.auth));
-    printf("%s\n", cli_log.auth ? "[LOGIN SUCCESFULL]" : "[LOGIN FAILED]");
-} while( !cli_log.auth );
+        read(cli_fd, &cli_log.auth, sizeof(cli_log.auth));
+        printf("%s\n", cli_log.auth ? "[LOGIN SUCCESFULL]" : "[LOGIN FAILED]");
 
+        if ( !cli_log.auth) {
+            printf("Try again later");
+            break;
+        }
+    }
 
     close(cli_fd);
     close(srv_fd);

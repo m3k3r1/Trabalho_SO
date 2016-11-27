@@ -22,3 +22,10 @@ server : $(OBJ)
 
 client : $(OBJ)
 	$(CC) -o  $@ $(SRC)/client.c $(SRC)/usr_mgmt.c $(CFLAGS)
+
+clean:
+	rm server client
+
+unlink:
+	rm res/client_*
+	rm res/server_fifo
