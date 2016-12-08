@@ -6,7 +6,6 @@ void set_crd(char usr[20], char pss[20]){
     printf ("[PASSWORD] : ");
     scanf("%s", pss);
 };
-
 bool usr_auth(char usr[20], char pss[20]){
     FILE *f_log = fopen(LOGS_FILE, "r");
     char tmp_usr[20];
@@ -26,7 +25,6 @@ bool usr_auth(char usr[20], char pss[20]){
     fclose(f_log);
     return false;
 };
-
 void save_player(player_t** head, char usr[20], int pid){
     if (head) {
         if (!(*head = malloc(sizeof(player_t)))) {
@@ -39,7 +37,6 @@ void save_player(player_t** head, char usr[20], int pid){
         *head = add_player(usr, pid);
     }
 }
-
 player_t* add_player( char usr[20], int pid){
     player_t *tmp;
 
@@ -54,3 +51,22 @@ player_t* add_player( char usr[20], int pid){
 
     return tmp;
 }
+bool chk_player(player_t *head ,char usr[20]){
+    while(head){
+        if( !strcmp(head->usr_name, usr) )
+            return true;
+        head = head->nxt_player;
+    }
+    return false;
+};
+int list_player(player_t *head ){
+    int counter = 0;
+    printf("::Active players::\n" );
+
+    while(head){
+        printf("%s\n", head->usr_name);
+        counter++;
+        head = head->nxt_player;
+    }
+    return counter;
+};

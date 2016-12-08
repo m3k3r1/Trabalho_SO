@@ -28,7 +28,7 @@ int main(int argc, char const *argv[]) {
         printf("%s\n", cli_log.auth ? "[LOGIN SUCCESFULL]" : "[LOGIN FAILED]");
 
         if ( !cli_log.auth) {
-            printf("Try again later");
+            fprintf(stderr, "Username or password not valid\n" );
             break;
         }
     }
