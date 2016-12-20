@@ -31,11 +31,11 @@ void save_player(player_t** head, char usr[20], int pid){
             perror("[MEMORY_ERROR]Can't alocate new node");
             return;
         }
-    }else{
+    }//else{
         while (*head)
             head = &(*head)->nxt_player;
         *head = add_player(usr, pid);
-    }
+    //}
 }
 player_t* add_player( char usr[20], int pid){
     player_t *tmp;
@@ -52,6 +52,8 @@ player_t* add_player( char usr[20], int pid){
     return tmp;
 }
 bool chk_player(player_t *head ,char usr[20]){
+    if (!head)
+        return false;
     while(head){
         if( !strcmp(head->usr_name, usr) )
             return true;
@@ -61,7 +63,7 @@ bool chk_player(player_t *head ,char usr[20]){
 };
 int list_player(player_t *head ){
     int counter = 0;
-    printf("::Active players::\n" );
+    printf("\n::Active players::\n" );
 
     while(head){
         printf("%s\n", head->usr_name);
