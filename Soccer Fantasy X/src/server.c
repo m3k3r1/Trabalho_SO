@@ -22,17 +22,18 @@ int main(int argc, char *argv[])
 
         cli_log.auth = usr_auth(cli_log.usr, cli_log.pss);
 
-        if (cli_log.auth){
-            if (chk_player(player_list ,cli_log.usr)) {
-                fprintf(stderr, "Player %s already logged in server\n" , cli_log.usr);
-                break;
-            }else{
+    //    if (cli_log.auth){
+    //        if (chk_player(player_list ,cli_log.usr)) {
+    //            fprintf(stderr, "Player %s already logged in server\n" , cli_log.usr);
+    //            break;
+    //        }else{
                 printf("%s\n", cli_log.auth ? "[LOGIN SUCCESFULL]" : "[LOGIN FAILED]");
                 save_player(&player_list ,cli_log.usr, cli_data.pid);
                 write(cli_fd, &cli_log.auth, sizeof(cli_log.auth));
-            }
-        }
+    //        }
+    //    }
     }
+
 
     list_player(player_list);
 
