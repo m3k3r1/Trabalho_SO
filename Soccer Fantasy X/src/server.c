@@ -7,7 +7,7 @@ int main(int argc, char *argv[])
     char cli_pipe_name[20], cmd[20];
     login_t cli_log;
     cli_info_t cli_data;
-    player_t* player_list;
+    player_t* player_list = NULL;
 
 //SELECT CONFIGURATION
     fd_set conj;
@@ -29,11 +29,14 @@ int main(int argc, char *argv[])
         ret = select(srv_fd + 1, &conj, NULL, NULL , &tempo);
 
         if (!ret) {
-            printf(".");
-            fflush(stdout);
+            //printf(".");
+            //fflush(stdout);
         }else if (ret > 0){
             if (FD_ISSET(0, &conj)) {
                 scanf("%s" ,cmd);
+                if (!strcmp(cmd, "list")) {
+                    list_player(player_list);
+                }
             }
             if (FD_ISSET(srv_fd, &conj)){
                 read(srv_fd, &cli_data, sizeof(cli_data));
@@ -45,22 +48,20 @@ int main(int argc, char *argv[])
 
                 cli_log.auth = usr_auth(cli_log.usr, cli_log.pss);
 
-            //    if (cli_log.auth){
-            //        if (chk_player(player_list ,cli_log.usr)) {
-            //            fprintf(stderr, "Player %s already logged in server\n" , cli_log.usr);
-            //            break;
-            //        }else{
-                        printf("%s\n", cli_log.auth ? "[LOGIN SUCCESFULL]" : "[LOGIN FAILED]");
-                        save_player(&player_list ,cli_log.usr, cli_data.pid);
-                        write(cli_fd, &cli_log.auth, sizeof(cli_log.auth));
-            //        }
-            //    }
+                if (cli_log.auth){
+                        if (chk_player(player_list ,cli_log.usr)) {
+                            fprintf(stderr, "Player %s already logged in server\n" , cli_log.usr);
+                            cli_log.auth = false;
+                            write(cli_fd, &cli_log.auth, sizeof(cli_log.auth));
+                        }else{
+                            printf("%s\n", cli_log.auth ? "[LOGIN SUCCESFULL]" : "[LOGIN FAILED]");
+                            save_player(&player_list ,cli_log.usr, cli_data.pid);
+                            write(cli_fd, &cli_log.auth, sizeof(cli_log.auth));
+                        }
+                }
             }
         }
     }while (strcmp(cmd, "exit"));
-
-
-    list_player(player_list);
 
     close(cli_fd);
     close(srv_fd);

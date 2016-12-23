@@ -26,17 +26,15 @@ bool usr_auth(char usr[20], char pss[20]){
     return false;
 };
 void save_player(player_t** head, char usr[20], int pid){
-    if (head) {
-        if (!(*head = malloc(sizeof(player_t)))) {
-            perror("[MEMORY_ERROR]Can't alocate new node");
-            return;
-        }
-    }//else{
-        while (*head)
+
+        while ( *head ) 
             head = &(*head)->nxt_player;
-        *head = add_player(usr, pid);
-    //}
+
+
+        *head= add_player(usr, pid);
+
 }
+
 player_t* add_player( char usr[20], int pid){
     player_t *tmp;
 
@@ -64,6 +62,11 @@ bool chk_player(player_t *head ,char usr[20]){
 int list_player(player_t *head ){
     int counter = 0;
     printf("\n::Active players::\n" );
+
+    if (head == NULL) {
+        printf("No active users\n" );
+        return 0;
+    }
 
     while(head){
         printf("%s\n", head->usr_name);
