@@ -20,9 +20,6 @@ int main(int argc, char const *argv[]) {
     mkfifo(cli_pipe_name, 0600);
     cli_fd = open(cli_pipe_name,  O_RDWR);
 
-
-
-
     while(true) {
         set_crd( cli_log.usr, cli_log.pss);
 

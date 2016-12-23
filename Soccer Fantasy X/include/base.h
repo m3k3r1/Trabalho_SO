@@ -12,5 +12,5 @@
 #define CLI_FIFO "res/client_%d_fifo"
 
 typedef struct {
-    int pid;
+    pid_t pid;
 } cli_info_t;
