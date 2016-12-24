@@ -62,6 +62,9 @@ int main(int argc, char *argv[])
                             save_player(&player_list ,cli_log.usr, cli_data.pid);
                             write(cli_fd, &cli_log.auth, sizeof(cli_log.auth));
                         }
+                }else{
+                    write(cli_fd, &cli_log.auth, sizeof(cli_log.auth));
+                    printf("%s\n", cli_log.auth ? "[LOGIN SUCCESFULL]" : "[LOGIN FAILED]");
                 }
             }
         }
