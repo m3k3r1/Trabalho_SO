@@ -26,15 +26,10 @@ bool usr_auth(char usr[20], char pss[20]){
     return false;
 };
 void save_player(player_t** head, char usr[20], int pid){
-
-        while ( *head ) 
+        while ( *head )
             head = &(*head)->nxt_player;
-
-
         *head= add_player(usr, pid);
-
 }
-
 player_t* add_player( char usr[20], int pid){
     player_t *tmp;
 
@@ -48,7 +43,7 @@ player_t* add_player( char usr[20], int pid){
     tmp->nxt_player = NULL;
 
     return tmp;
-}
+};
 bool chk_player(player_t *head ,char usr[20]){
     if (!head)
         return false;

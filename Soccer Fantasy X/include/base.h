@@ -14,3 +14,7 @@
 typedef struct {
     pid_t pid;
 } cli_info_t;
+
+typedef struct {
+    int game_result;
+} game_stat_t

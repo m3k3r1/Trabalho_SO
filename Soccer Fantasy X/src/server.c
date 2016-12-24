@@ -34,9 +34,13 @@ int main(int argc, char *argv[])
         }else if (ret > 0){
             if (FD_ISSET(0, &conj)) {
                 scanf("%s" ,cmd);
-                if (!strcmp(cmd, "list")) {
+                if (!strcmp(cmd, "users")) {
                     list_player(player_list);
                 }
+                if (!strcmp(cmd, "user")) {
+                    //sign_in();
+                }
+
             }
             if (FD_ISSET(srv_fd, &conj)){
                 read(srv_fd, &cli_data, sizeof(cli_data));
@@ -61,7 +65,7 @@ int main(int argc, char *argv[])
                 }
             }
         }
-    }while (strcmp(cmd, "exit"));
+    }while (strcmp(cmd, "shutdown"));
 
     close(cli_fd);
     close(srv_fd);

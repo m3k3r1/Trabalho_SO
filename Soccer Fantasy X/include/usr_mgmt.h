@@ -27,6 +27,7 @@ void save_player(player_t** head, char usr[20], int pid);
 player_t* add_player( char usr[20], int pid);
 bool chk_player(player_t * head ,char usr[20]);
 int list_player();
+//void sign_in();
 //void free_node();
 
 #endif
