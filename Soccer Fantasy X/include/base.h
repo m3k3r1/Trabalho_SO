@@ -17,4 +17,4 @@ typedef struct {
 
 typedef struct {
     int game_result;
-} game_stat_t
+} game_stat_t;

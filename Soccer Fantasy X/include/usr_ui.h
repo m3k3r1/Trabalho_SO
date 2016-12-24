@@ -8,8 +8,8 @@
 #include <ncurses.h>
 
 typedef struct _win_border_struct {
-	chtype 	ls, rs, ts, bs,
-	 	tl, tr, bl, br;
+	chtype 	left_s, right_s, top_s, bottom_s,
+	 	top_l, top_r, bottom_l, bottom_r;
 }WIN_BORDER;
 
 typedef struct _WIN_struct {
