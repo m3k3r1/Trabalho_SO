@@ -1,12 +1,14 @@
-#include "base.h"
+#include <pthread.h>
 #include "usr_mgmt.h"
 #include "usr_ui.h"
+#include "thd_mgmt.h"
 
 int main(int argc, char const *argv[]) {
-    int srv_fd, cli_fd,ch;
+    int srv_fd, cli_fd;
     char cli_pipe_name[20];
     login_t cli_log;
     cli_info_t cli_data;
+    pthread_t curses;
     WIN win;
 
     if( access(SRV_FIFO, F_OK) ){
@@ -33,29 +35,11 @@ int main(int argc, char const *argv[]) {
             fprintf(stderr, "Username or password not valid\n" );
             break;
         }else{
-            //INIT NCURSES
-            initscr();
-            start_color();			/* Start the color functionality */
-            cbreak();
-            keypad(stdscr, TRUE);
-            noecho();
-            init_pair(1, COLOR_CYAN, COLOR_BLACK);
-            /* Initialize the window parameters */
-            init_win_params(&win);
-            attron(COLOR_PAIR(1));
-            printw("Press F1 to exit");
-            refresh();
-            attroff(COLOR_PAIR(1));
-            create_box(&win);
-
-            while((ch = getch()) != KEY_F(1)){
-                refresh();
-                create_box(&win);
-            }
-
+            pthread_create(&curses, NULL, init_fld(&win), NULL);
             break;
         }
     }
+
 
     endwin();
     close(cli_fd);
