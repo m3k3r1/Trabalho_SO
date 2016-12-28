@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 #include <stdbool.h>
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -18,3 +19,5 @@ typedef struct {
 typedef struct {
     int game_result;
 } game_stat_t;
+
+void cmd_control(char *cmd, char* arg1, char* arg2);

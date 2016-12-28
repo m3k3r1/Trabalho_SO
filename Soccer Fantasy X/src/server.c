@@ -3,7 +3,7 @@
 
 int main(int argc, char *argv[]){
     int srv_fd, cli_fd;
-    char cli_pipe_name[20], cmd[20];
+    char cli_pipe_name[20], cmd[20], arg1[20], arg2[20];
     bool game_allow = false;
     login_t cli_log;
     cli_info_t cli_data;
@@ -35,6 +35,9 @@ int main(int argc, char *argv[]){
         }else if (ret > 0){
             if (FD_ISSET(0, &conj)) {
                 scanf("%s" ,cmd);
+
+                cmd_control(cmd, arg1, arg2);
+
                 if (!strcmp(cmd, "users")) {
                     list_player(player_list);
                 }
@@ -81,4 +84,29 @@ int main(int argc, char *argv[]){
     unlink(cli_pipe_name);
     unlink(SRV_FIFO);
     exit(0);
+}
+
+
+void cmd_control(char *cmd, char* arg1, char* arg2){
+    int  flag = 1, counter1 = 0, counter2=0 ;
+    char tmp_cmd[20];
+
+    for (size_t i = 0; cmd[i] != '\0'; i++) {
+        if ( cmd[i] == ' ' ) {
+            flag++;
+        }
+        if (flag == 1) {
+            tmp_cmd[i] = cmd[i];
+        }
+        if (flag == 2) {
+            arg1[counter1] = cmd[i];
+            counter1++;
+        }
+        if (flag == 3) {
+            arg2[counter2] = cmd[i];
+            counter2++;
+        }
+    }
+
+    strcpy(cmd, tmp_cmd);
 }
