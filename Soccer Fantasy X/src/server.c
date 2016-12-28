@@ -3,7 +3,7 @@
 
 int main(int argc, char *argv[]){
     int srv_fd, cli_fd;
-    char cli_pipe_name[20], cmd[20];
+    char cli_pipe_name[20], cmd[20], filename[20];
     bool game_allow = false;
     login_t cli_log;
     cli_info_t cli_data;
@@ -13,8 +13,14 @@ int main(int argc, char *argv[]){
     struct timeval tempo;
     int ret;
 
+    if(argc > 0)
+      strcpy(filename, argv[1]);
+
     if( !access(SRV_FIFO, F_OK) )
-        exit(1);
+    {
+      printf("Another server running");
+      exit(1);
+    }
 
     mkfifo(SRV_FIFO , 0600);
     srv_fd = open(SRV_FIFO, O_RDWR);
@@ -55,7 +61,7 @@ int main(int argc, char *argv[]){
                 sprintf(cli_pipe_name , CLI_FIFO, cli_data.pid );
                 cli_fd = open(cli_pipe_name, O_WRONLY|O_CREAT, 0600);
 
-                cli_log.auth = usr_auth(cli_log.usr, cli_log.pss);
+                cli_log.auth = usr_auth(cli_log.usr, cli_log.pss, filename);
 
                 if (cli_log.auth){
                         if (chk_player(player_list ,cli_log.usr)) {
