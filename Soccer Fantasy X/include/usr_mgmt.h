@@ -22,7 +22,7 @@ struct player_t {
 } ;
 
 void set_crd(char usr[20], char pss[20]);
-bool usr_auth(char usr[20], char pss[20]);
+bool usr_auth(char usr[20], char pss[20], char * filename);
 void save_player(player_t** head, char usr[20], int pid);
 player_t* add_player( char usr[20], int pid);
 bool chk_player(player_t * head ,char usr[20]);

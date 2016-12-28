@@ -6,8 +6,9 @@ void set_crd(char usr[20], char pss[20]){
     printf ("[PASSWORD] : ");
     scanf("%s", pss);
 };
-bool usr_auth(char usr[20], char pss[20]){
-    FILE *f_log = fopen(LOGS_FILE, "r");
+
+bool usr_auth(char usr[20], char pss[20], char * filename){
+    FILE *f_log = fopen(filename, "r");
     char tmp_usr[20];
     char tmp_pss[20];
 
@@ -25,11 +26,13 @@ bool usr_auth(char usr[20], char pss[20]){
     fclose(f_log);
     return false;
 };
+
 void save_player(player_t** head, char usr[20], int pid){
         while ( *head )
             head = &(*head)->nxt_player;
         *head= add_player(usr, pid);
 }
+
 player_t* add_player( char usr[20], int pid){
     player_t *tmp;
 
