@@ -9,7 +9,6 @@ void* init_fld(void* th){
     keypad(stdscr, TRUE);
     noecho();
     init_pair(1, COLOR_CYAN, COLOR_BLACK);
-    /* Initialize the window parameters */
     init_win_params(th);
     attron(COLOR_PAIR(1));
     printw("Press F1 to exit");

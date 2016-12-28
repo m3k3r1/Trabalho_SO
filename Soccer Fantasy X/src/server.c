@@ -1,19 +1,20 @@
 #include "base.h"
 #include "usr_mgmt.h"
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]){
     int srv_fd, cli_fd;
     char cli_pipe_name[20], cmd[20];
+    bool game_allow = false;
     login_t cli_log;
     cli_info_t cli_data;
     player_t* player_list = NULL;
 
-//SELECT CONFIGURATION
     fd_set conj;
     struct timeval tempo;
     int ret;
 
+    if( !access(SRV_FIFO, F_OK) )
+        exit(1);
 
     mkfifo(SRV_FIFO , 0600);
     srv_fd = open(SRV_FIFO, O_RDWR);
@@ -40,7 +41,11 @@ int main(int argc, char *argv[])
                 if (!strcmp(cmd, "user")) {
                     //sign_in();
                 }
-
+                if (!strcmp(cmd, "start") && game_allow) {
+                    write(cli_fd, &game_allow, sizeof(game_allow));
+                }else if(!strcmp(cmd, "start") && !game_allow){
+                    printf("[GAME]No players connected \n");
+                }
             }
             if (FD_ISSET(srv_fd, &conj)){
                 read(srv_fd, &cli_data, sizeof(cli_data));
@@ -61,6 +66,7 @@ int main(int argc, char *argv[])
                             printf("%s\n", cli_log.auth ? "[LOGIN SUCCESFULL]" : "[LOGIN FAILED]");
                             save_player(&player_list ,cli_log.usr, cli_data.pid);
                             write(cli_fd, &cli_log.auth, sizeof(cli_log.auth));
+                            game_allow = true;
                         }
                 }else{
                     write(cli_fd, &cli_log.auth, sizeof(cli_log.auth));
@@ -73,5 +79,6 @@ int main(int argc, char *argv[])
     close(cli_fd);
     close(srv_fd);
     unlink(cli_pipe_name);
+    unlink(SRV_FIFO);
     exit(0);
 }

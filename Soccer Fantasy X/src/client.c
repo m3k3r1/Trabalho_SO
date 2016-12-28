@@ -1,6 +1,6 @@
-#include <pthread.h>
 #include "usr_mgmt.h"
 #include "usr_ui.h"
+#include "sig_mgmt.h"
 #include "thd_mgmt.h"
 
 int main(int argc, char const *argv[]) {
@@ -9,6 +9,7 @@ int main(int argc, char const *argv[]) {
     login_t cli_log;
     cli_info_t cli_data;
     pthread_t curses;
+    bool game_start = false;
     WIN win;
 
     if( access(SRV_FIFO, F_OK) ){
@@ -34,12 +35,15 @@ int main(int argc, char const *argv[]) {
         if ( !cli_log.auth) {
             fprintf(stderr, "Username or password not valid\n" );
             break;
+
         }else{
-            pthread_create(&curses, NULL, init_fld(&win), NULL);
-            break;
+            read(cli_fd, &game_start, sizeof(game_start));
+            if (game_start) {
+                pthread_create(&curses, NULL, init_fld(&win), NULL);
+                break;
+            }
         }
     }
-
 
     endwin();
     close(cli_fd);
