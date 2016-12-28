@@ -3,8 +3,8 @@
 
 int main(int argc, char *argv[]){
     int srv_fd, cli_fd;
-    char cli_pipe_name[20], cmd[20], arg1[20], arg2[20];
-    bool game_allow = false;
+    char cli_pipe_name[20], cmd[20], arg1[20], arg2[20], file_name[20];
+    bool game_allow = false, custom_login_file = false;
     login_t cli_log;
     cli_info_t cli_data;
     player_t* player_list = NULL;
@@ -13,8 +13,15 @@ int main(int argc, char *argv[]){
     struct timeval tempo;
     int ret;
 
-    if( !access(SRV_FIFO, F_OK) )
+    if (argc > 1){
+        custom_login_file = true;
+        strcpy(file_name,  argv[1]);
+    }
+
+    if( !access(SRV_FIFO, F_OK) ){
+        perror("[ERROR]Server already running\n");
         exit(1);
+    }
 
     mkfifo(SRV_FIFO , 0600);
     srv_fd = open(SRV_FIFO, O_RDWR);
@@ -29,20 +36,17 @@ int main(int argc, char *argv[]){
 
         ret = select(srv_fd + 1, &conj, NULL, NULL , &tempo);
 
-        if (!ret) {
-            //printf(".");
-            //fflush(stdout);
-        }else if (ret > 0){
+        if (ret > 0){
             if (FD_ISSET(0, &conj)) {
-                scanf("%s" ,cmd);
-
+                fgets(cmd, sizeof(cmd), stdin);
+                strtok (cmd, "\n");
                 cmd_control(cmd, arg1, arg2);
 
                 if (!strcmp(cmd, "users")) {
                     list_player(player_list);
                 }
                 if (!strcmp(cmd, "user")) {
-                    //sign_in();
+                    sign_in(arg1, arg2,file_name, custom_login_file);
                 }
                 if (!strcmp(cmd, "start") && game_allow) {
                     write(cli_fd, &game_allow, sizeof(game_allow));
@@ -58,7 +62,7 @@ int main(int argc, char *argv[]){
                 sprintf(cli_pipe_name , CLI_FIFO, cli_data.pid );
                 cli_fd = open(cli_pipe_name, O_WRONLY|O_CREAT, 0600);
 
-                cli_log.auth = usr_auth(cli_log.usr, cli_log.pss);
+                cli_log.auth = usr_auth(cli_log.usr, cli_log.pss, file_name, custom_login_file);
 
                 if (cli_log.auth){
                         if (chk_player(player_list ,cli_log.usr)) {
@@ -88,23 +92,27 @@ int main(int argc, char *argv[]){
 
 
 void cmd_control(char *cmd, char* arg1, char* arg2){
-    int  flag = 1, counter1 = 0, counter2=0 ;
+    int  flag = 1, counter = 0, counter1 = 0;
     char tmp_cmd[20];
+
+    memset(&(*arg1), 0, strlen(arg1));
+    memset(&(*arg2), 0, strlen(arg2));
 
     for (size_t i = 0; cmd[i] != '\0'; i++) {
         if ( cmd[i] == ' ' ) {
             flag++;
+            continue;
         }
         if (flag == 1) {
             tmp_cmd[i] = cmd[i];
         }
         if (flag == 2) {
-            arg1[counter1] = cmd[i];
-            counter1++;
+            arg1[counter] = cmd[i];
+            counter++;
         }
         if (flag == 3) {
-            arg2[counter2] = cmd[i];
-            counter2++;
+            arg2[counter1] = cmd[i];
+            counter1++;
         }
     }
 
