@@ -79,8 +79,6 @@ int list_player(player_t *head ){
 };
 void sign_in(char* new_usr, char* new_pwd, char* file_name, bool custom_file){
     FILE *f_log;
-    char tmp_usr[20];
-    char tmp_pss[20];
 
     if(!custom_file){
          f_log= fopen(LOGS_FILE, "a+");
@@ -93,7 +91,6 @@ void sign_in(char* new_usr, char* new_pwd, char* file_name, bool custom_file){
         return;
     }
 
-    while (fscanf(f_log, "%s %s", tmp_usr, tmp_pss) == 2);
     fprintf(f_log, "%s %s\n", new_usr, new_pwd);
 
     printf("[NEW USER] - (%s) (%s)\n", new_usr, new_pwd );

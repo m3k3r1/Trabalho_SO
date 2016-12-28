@@ -92,14 +92,15 @@ int main(int argc, char *argv[]){
 
 
 void cmd_control(char *cmd, char* arg1, char* arg2){
-    int  flag = 1, counter = 0, counter1 = 0;
+    int  flag = 1, counter = 0;
     char tmp_cmd[20];
 
-    memset(&(*arg1), 0, strlen(arg1));
-    memset(&(*arg2), 0, strlen(arg2));
+    //memset(&(*arg1), 0, strlen(arg1));
+    //memset(&(*arg2), 0, strlen(arg2));
 
     for (size_t i = 0; cmd[i] != '\0'; i++) {
         if ( cmd[i] == ' ' ) {
+            counter = 0;
             flag++;
             continue;
         }
@@ -111,10 +112,13 @@ void cmd_control(char *cmd, char* arg1, char* arg2){
             counter++;
         }
         if (flag == 3) {
-            arg2[counter1] = cmd[i];
-            counter1++;
+            arg2[counter] = cmd[i];
+            counter++;
         }
     }
-
     strcpy(cmd, tmp_cmd);
+
+    printf("[DEBUG]%s\n", cmd );
+    printf("[DEBUG]%s\n", arg1 );
+    printf("[DEBUG]%s\n", arg2 );
 }
