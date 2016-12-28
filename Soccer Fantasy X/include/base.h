@@ -17,4 +17,15 @@ typedef struct {
 
 typedef struct {
     int game_result;
+    team_t teams[2];
 } game_stat_t;
+
+typedef struct
+{
+  teammate_t * players;
+} team_t;
+
+typedef struct
+{
+  int posX, posY, id;
+} teammate_t;
