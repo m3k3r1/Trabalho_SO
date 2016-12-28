@@ -28,6 +28,6 @@ player_t* add_player( char usr[20], int pid);
 bool chk_player(player_t * head ,char usr[20]);
 int list_player(player_t *head );
 void sign_in(char* new_usr, char* new_pwd, char* file_name, bool custom_file);
-//void free_node();
+void free_mem(player_t* head);
 
 #endif

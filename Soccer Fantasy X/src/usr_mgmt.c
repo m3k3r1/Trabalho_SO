@@ -17,7 +17,6 @@ bool usr_auth(char usr[20], char pss[20], char * file_name, bool custom_file){
          f_log = fopen(file_name, "r");
     }
 
-
     if(!f_log){
         perror("[ERROR]User database file not found");
         return false;
@@ -96,3 +95,12 @@ void sign_in(char* new_usr, char* new_pwd, char* file_name, bool custom_file){
     printf("[NEW USER] - (%s) (%s)\n", new_usr, new_pwd );
     fclose(f_log);
 };
+void free_mem(player_t* head) {
+    player_t* tmp = NULL;
+
+    while (head != NULL) {
+        tmp = head->nxt_player;
+        free(head);
+        head = tmp;
+    }
+}

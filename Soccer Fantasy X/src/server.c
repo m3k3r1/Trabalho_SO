@@ -83,6 +83,7 @@ int main(int argc, char *argv[]){
         }
     }while (strcmp(cmd, "shutdown"));
 
+    free_mem(player_list);
     close(cli_fd);
     close(srv_fd);
     unlink(cli_pipe_name);
@@ -95,8 +96,10 @@ void cmd_control(char *cmd, char* arg1, char* arg2){
     int  flag = 1, counter = 0;
     char tmp_cmd[20];
 
-    //memset(&(*arg1), 0, strlen(arg1));
-    //memset(&(*arg2), 0, strlen(arg2));
+    if(strlen(arg1) !=0 || strlen(arg2) !=0){
+        memset(&(*arg1), 0, strlen(arg1));
+        memset(&(*arg2), 0, strlen(arg2));
+    }
 
     for (size_t i = 0; cmd[i] != '\0'; i++) {
         if ( cmd[i] == ' ' ) {
@@ -117,8 +120,4 @@ void cmd_control(char *cmd, char* arg1, char* arg2){
         }
     }
     strcpy(cmd, tmp_cmd);
-
-    printf("[DEBUG]%s\n", cmd );
-    printf("[DEBUG]%s\n", arg1 );
-    printf("[DEBUG]%s\n", arg2 );
 }
