@@ -1,11 +1,12 @@
 #include "ses_mgmt.h"
 
-// STARTS RANDOM NUMBER GENERATION
-void init_random_gen()
-{
-  srand((unsigned) time(NULL));
+void set_game(game_stat_t** head, int t){
+    while ( *head )
+        head = &(*head)->next_game;
+    *head= new_game(t);
 }
 
+<<<<<<< HEAD
 // GENERATES RANDOM NUM BETWEEN MIN AND MAX, INCLUSIVE
 int randNum(int min, int max)
 {
@@ -141,4 +142,20 @@ void startGame(game_stat_t * game, game_control_t ** head, int seconds)
   }
 
   // THREADS FOR PLAYERS??? TODO
+=======
+game_stat_t* new_game(int t){
+    game_stat_t* tmp;
+
+    if (!(tmp = malloc(sizeof(game_stat_t)))) {
+        perror("[MEMORY_ERROR]Can't alocate new node");
+        return NULL;
+    }
+
+    tmp->game_result[0] = 0;
+    tmp->game_result[1] = 0;
+    tmp->dur = t;
+    tmp->next_game = NULL;
+
+    return tmp;
+>>>>>>> master
 }

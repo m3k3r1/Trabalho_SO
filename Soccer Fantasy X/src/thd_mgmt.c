@@ -1,24 +1,15 @@
 #include "thd_mgmt.h"
+#include "usr_ui.h"
 
-void* init_fld(void* th){
+
+void* rdr_map(WIN* p_win){
     int ch;
 
-    initscr();
-    start_color();
-    cbreak();
-    keypad(stdscr, TRUE);
-    noecho();
-    init_pair(1, COLOR_CYAN, COLOR_BLACK);
-    init_win_params(th);
-    attron(COLOR_PAIR(1));
-    printw("Press F1 to exit");
-    refresh();
-    attroff(COLOR_PAIR(1));
-    create_box(th);
-
-    while((ch = getch()) != KEY_F(1)){
+    create_box(p_win);
+    while( ((ch = getch()) != KEY_F(1))){
         refresh();
-        create_box(th);
+        create_box(p_win);
     }
+
     pthread_exit(0);
 };

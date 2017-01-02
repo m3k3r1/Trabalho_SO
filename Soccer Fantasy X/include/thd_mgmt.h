@@ -8,6 +8,6 @@
 
 bool END_THD;
 
-void* init_fld(void* th);
+void* rdr_map(WIN* p_win);
 
 #endif

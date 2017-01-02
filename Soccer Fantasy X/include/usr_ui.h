@@ -18,6 +18,8 @@ typedef struct _WIN_struct {
 	WIN_BORDER border;
 }WIN;
 
+void init_fld(WIN* p_win);
+void init_players(WIN* p_win);
 void init_win_params(WIN *p_win);
 void create_box(WIN *win);
 

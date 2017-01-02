@@ -43,7 +43,9 @@ int main(int argc, char const *argv[]) {
         }else{
             read(cli_fd, &game_start, sizeof(game_start));
             if (game_start) {
-                pthread_create(&curses, NULL, init_fld(&win), NULL);
+                    init_fld(&win);
+                    init_players(&win);
+                    pthread_create(&curses,NULL, rdr_map(&win), NULL);
                 break;
             }
         }

@@ -9,5 +9,5 @@
 typedef struct {
     int n1, n2;
     char op;
-    int pid;
+    pid_t pid;
 } PEDIDO;

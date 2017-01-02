@@ -10,9 +10,14 @@ int main(int argc, char *argv[]){
     bool game_allow = false, custom_login_file = false;
     login_t cli_log;
     cli_info_t cli_data;
+<<<<<<< HEAD
     player_t * player_list = NULL;
     game_stat_t game;
     game_control_t * head = NULL;
+=======
+    player_t* player_list = NULL;
+    game_stat_t* game_list = NULL;
+>>>>>>> master
 
     fd_set conj;
     struct timeval tempo;
@@ -58,9 +63,13 @@ int main(int argc, char *argv[]){
                 }
 
                 if (!strcmp(cmd, "start") && game_allow) {
+<<<<<<< HEAD
                     puts("STARTING GAME\n");
                     startGame(&game, &head, atoi(arg1));
                     puts("GAME STARTED\n");
+=======
+                    set_game(&game_list, atoi(arg1));
+>>>>>>> master
                     write(cli_fd, &game_allow, sizeof(game_allow));
                 }else
                   if(!strcmp(cmd, "start") && !game_allow)
