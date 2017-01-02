@@ -1,23 +1,48 @@
 #include "ses_mgmt.h"
 
-void set_game(game_stat_t** head, int t){
-    while ( *head )
-        head = &(*head)->next_game;
-    *head= new_game(t);
+// STARTS RANDOM NUMBER GENERATION
+void init_random_gen()
+{
+  srand((unsigned) time(NULL));
 }
 
-game_stat_t* new_game(int t){
-    game_stat_t* tmp;
+// GENERATES RANDOM NUM BETWEEN MIN AND MAX, INCLUSIVE
+int randNum(int min, int max)
+{
+  return min + rand() % (max - min + 1);
+}
 
-    if (!(tmp = malloc(sizeof(game_stat_t)))) {
-        perror("[MEMORY_ERROR]Can't alocate new node");
-        return NULL;
-    }
+// CHECK POS AVAILABILITY
+int moveCheck(int x, int y, game_control_t * head)
+{
+  game_control_t * curr = head;
 
-    tmp->game_result[0] = 0;
-    tmp->game_result[1] = 0;
-    tmp->dur = t;
-    tmp->next_game = NULL;
+  while(curr != NULL)
+    if(x == curr->posX && y == curr->posY)
+      return 1;
 
-    return tmp;
+  return 0;
+}
+
+void move(game_control_t * head, int id)
+{
+  int tmpX, tmpY;
+  game_control_t * curr;
+  curr = head;
+
+  // SELECT RIGHT PLAYER
+  for(int i = 0; i <= id; i++)
+    curr = curr->next;
+
+  // GENERATES RANDOM POSITION
+  do {
+    tmpX = curr->posX;
+    tmpY = curr->posY;
+
+    tmpX = randNum(tmpX - 1, tmpX + 1);
+    tmpY = randNum(tmpY - 1, tmpY + 1);
+  } while(moveCheck(tmpX, tmpY, head));
+
+  curr->posX = tmpX;
+  curr->posY = tmpY;
 }
