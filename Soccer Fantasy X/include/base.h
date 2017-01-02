@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <signal.h>
 #include <ctype.h>
 #include <stdbool.h>
 #include <sys/stat.h>
@@ -16,8 +17,6 @@ typedef struct {
     pid_t pid;
 } cli_info_t;
 
-typedef struct {
-    int game_result;
-} game_stat_t;
-
 void cmd_control(char *cmd, char* arg1, char* arg2);
+void signal_handler_srv(int sig);
+void signal_handler_cli(int sig);

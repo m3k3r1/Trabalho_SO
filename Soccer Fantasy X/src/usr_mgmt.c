@@ -104,3 +104,9 @@ void free_mem(player_t* head) {
         head = tmp;
     }
 }
+void exit_warning(player_t* list){
+    while (list != NULL) {
+        kill(list->pid, 10);
+        list = list->nxt_player;
+    }
+}

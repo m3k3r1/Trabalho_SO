@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include <signal.h>
 
 #define LOGS_FILE "res/cli_login.txt"
 
@@ -28,6 +29,7 @@ player_t* add_player( char usr[20], int pid);
 bool chk_player(player_t * head ,char usr[20]);
 int list_player(player_t *head );
 void sign_in(char* new_usr, char* new_pwd, char* file_name, bool custom_file);
+void exit_warning(player_t* list);
 void free_mem(player_t* head);
 
 #endif

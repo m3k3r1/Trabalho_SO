@@ -1,5 +1,8 @@
 #include "base.h"
 #include "usr_mgmt.h"
+#include "ses_mgmt.h"
+
+int EXIT = 1;
 
 int main(int argc, char *argv[]){
     int srv_fd, cli_fd;
@@ -8,10 +11,13 @@ int main(int argc, char *argv[]){
     login_t cli_log;
     cli_info_t cli_data;
     player_t* player_list = NULL;
+    game_stat_t* game_list = NULL;
 
     fd_set conj;
     struct timeval tempo;
     int ret;
+
+    signal(SIGUSR1, signal_handler_srv);
 
     if (argc > 1){
         custom_login_file = true;
@@ -49,6 +55,7 @@ int main(int argc, char *argv[]){
                     sign_in(arg1, arg2,file_name, custom_login_file);
                 }
                 if (!strcmp(cmd, "start") && game_allow) {
+                    set_game(&game_list, atoi(arg1));
                     write(cli_fd, &game_allow, sizeof(game_allow));
                 }else if(!strcmp(cmd, "start") && !game_allow){
                     printf("[GAME]No players connected \n");
@@ -81,8 +88,9 @@ int main(int argc, char *argv[]){
                 }
             }
         }
-    }while (strcmp(cmd, "shutdown"));
+    }while (strcmp(cmd, "shutdown") && EXIT);
 
+    exit_warning(player_list);
     free_mem(player_list);
     close(cli_fd);
     close(srv_fd);
@@ -90,7 +98,6 @@ int main(int argc, char *argv[]){
     unlink(SRV_FIFO);
     exit(0);
 }
-
 
 void cmd_control(char *cmd, char* arg1, char* arg2){
     int  flag = 1, counter = 0;
@@ -120,4 +127,11 @@ void cmd_control(char *cmd, char* arg1, char* arg2){
         }
     }
     strcpy(cmd, tmp_cmd);
+}
+void signal_handler_srv(int sig){
+    if (sig == SIGUSR1) {
+        printf("[SIGUSR1 RECEIVED] - Shuting down\n");
+        EXIT = 0;
+    }
+
 }

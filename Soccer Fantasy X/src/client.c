@@ -3,6 +3,8 @@
 #include "sig_mgmt.h"
 #include "thd_mgmt.h"
 
+int EXIT = 1;
+
 int main(int argc, char const *argv[]) {
     int srv_fd, cli_fd;
     char cli_pipe_name[20];
@@ -11,6 +13,8 @@ int main(int argc, char const *argv[]) {
     pthread_t curses;
     bool game_start = false;
     WIN win;
+
+    signal(SIGUSR1, signal_handler_cli);
 
     if( access(SRV_FIFO, F_OK) ){
         perror("[ERROR]Server not found \n");
@@ -23,7 +27,7 @@ int main(int argc, char const *argv[]) {
     mkfifo(cli_pipe_name, 0600);
     cli_fd = open(cli_pipe_name,  O_RDWR);
 
-    while(true) {
+    while(true && EXIT) {
         set_crd( cli_log.usr, cli_log.pss);
 
         write(srv_fd, &cli_data, sizeof(cli_data));
@@ -51,4 +55,11 @@ int main(int argc, char const *argv[]) {
     unlink(cli_pipe_name);
     unlink(SRV_FIFO);
     exit(0);
+}
+
+void signal_handler_cli(int sig){
+    if (sig == SIGUSR1) {
+        printf("[SERVER] - Shuting down\n");
+        EXIT = 0;
+    }
 }
