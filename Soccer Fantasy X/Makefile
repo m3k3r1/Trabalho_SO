@@ -27,5 +27,4 @@ clean:
 	rm server client obj/*
 
 unlink:
-	rm res/client_*
-	rm res/server_fifo
+	rm res/client_* res/server_fifo
