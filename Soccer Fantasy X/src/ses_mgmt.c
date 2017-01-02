@@ -18,8 +18,11 @@ int moveCheck(int x, int y, game_control_t * head)
   game_control_t * curr = head;
 
   while(curr != NULL)
+  {
     if(x == curr->posX && y == curr->posY)
       return 1;
+    curr = curr->next;
+  }
 
   return 0;
 }
