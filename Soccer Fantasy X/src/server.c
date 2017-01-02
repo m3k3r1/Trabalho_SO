@@ -10,8 +10,9 @@ int main(int argc, char *argv[]){
     bool game_allow = false, custom_login_file = false;
     login_t cli_log;
     cli_info_t cli_data;
-    player_t* player_list = NULL;
-    game_stat_t* game_list = NULL;
+    player_t * player_list = NULL;
+    game_stat_t game;
+    game_control_t * head = NULL; 
 
     fd_set conj;
     struct timeval tempo;
@@ -55,7 +56,7 @@ int main(int argc, char *argv[]){
                     sign_in(arg1, arg2,file_name, custom_login_file);
                 }
                 if (!strcmp(cmd, "start") && game_allow) {
-                    set_game(&game_list, atoi(arg1));
+                    // TODO START THE GAME
                     write(cli_fd, &game_allow, sizeof(game_allow));
                 }else if(!strcmp(cmd, "start") && !game_allow){
                     printf("[GAME]No players connected \n");

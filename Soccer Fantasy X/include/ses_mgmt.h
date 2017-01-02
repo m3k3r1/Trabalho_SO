@@ -5,23 +5,22 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <time.h>
 
-typedef struct game_stat_t game_stat_t;
- struct game_stat_t{
-    int game_result[1];
-    int dur;
-    game_stat_t* next_game;
-} ;
+#define width 51 // COMPRIMENTO
+#define height 21 // LARGURA
 
-typedef struct {
-    int player;
-    int pos_x;
-    int pos_y;
-    //bool have_ball;
-} game_control_t;
+typedef struct{
+    int game_result[2];
+    int seconds;
+} game_stat_t;
 
-
-void set_game(game_stat_t** head, int t);
-game_stat_t* new_game(int t);
+typedef struct game_control_t game_control_t;
+struct game_control_t {
+    int role, posX, posY, id;
+    pid_t user;
+    game_control_t * next;
+    //bool have_b all;
+};
 
 #endif
