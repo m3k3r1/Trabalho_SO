@@ -8,6 +8,10 @@
 #include <time.h>
 #include <pthread.h>
 #include <stdbool.h>
+#include <unistd.h>
+
+#define WIDTH 51
+#define HEIGHT 21
 
 typedef struct{
     int game_result[2];

@@ -13,8 +13,13 @@ int moveCheck(int x, int y, game_control_t * head)
 
   while(curr != NULL)
   {
-    if(x == curr->posX && y == curr->posY)
-      return 1;
+    if(x > 0 && x < WIDTH && y > 0 && y < HEIGHT)
+      if(x == curr->posX && y == curr->posY)
+        return 1;
+      else
+        return 0;
+    else
+      return 0;
     curr = curr->next;
   }
 
@@ -26,7 +31,22 @@ void * PlayerMovement(void * arg)
 {
   game_control_t * player = (game_control_t *) arg;
   while(1)
+  {
     move(player);
+    switch(player->role)
+    {
+      case 0:
+        sleep(0.3);
+        break;
+
+      case 1:
+        sleep(0.4);
+        break;
+
+      case 2:
+        sleep(0.3);
+    }
+  }
 
   return NULL;
 }
@@ -38,11 +58,15 @@ void move(game_control_t * player)
 
   // GENERATES RANDOM POSITION
   do {
-    tmpX = player->posX;
-    tmpY = player->posY;
+    do {
+      tmpX = player->posX;
+      tmpX = randNum(tmpX - 1, tmpX + 1);
+    } while(tmpX < 0 || tmpX > WIDTH);
 
-    tmpX = randNum(tmpX - 1, tmpX + 1);
-    tmpY = randNum(tmpY - 1, tmpY + 1);
+    do {
+      tmpY = player->posY;
+      tmpY = randNum(tmpY - 1, tmpY + 1);
+    } while(tmpY < 0 || tmpY > HEIGHT);
   } while(moveCheck(tmpX, tmpY, player->head));
 
   player->posX = tmpX;
@@ -109,6 +133,7 @@ void startGame(game_stat_t * game, game_control_t ** head, int seconds)
     curr->posX = 2;
     curr->posY = 2;
 
+    curr->id = i;
     // ASSIGN ROLE
     // GOALKEEPER
     if(!j)
