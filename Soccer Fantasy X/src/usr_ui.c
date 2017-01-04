@@ -40,34 +40,31 @@ void create_box(WIN *p_win){
 
 	refresh();
 }
-void init_players(WIN* p_win, game_control_t* game){
-	int goal_keeper_x, goal_keeper_y, defense_x, defense_y, attack_x, attack_y
+void init_players(WIN* p_win, client_data_t *p_pos,int num_p){
+	int goal_keeper_x, goal_keeper_y, defense_x, defense_y, attack_x, attack_y;
 	chtype goal_keeper = '0';
 	chtype defense = '1';
 	chtype attack = '2';
 
+	int i = 0;
 
-	while (game) {
-		if (game->role == 0) {
-			goal_keeper_x = p_win->startx + 7*(p_win->width/8);
-			goal_keeper_y = p_win->starty + p_win->height/2;
-		}else if (game->role == 1){
-			defense_x =   p_win->startx + 3*(p_win->width/4);
-			defense_y = p_win->starty + p_win->height/4;
-		}else if(game->role == 2){
-			attack_x = p_win->startx +  5*((p_win->width/2)/4);
-			attack_y =  p_win->starty + p_win->height/4;
+
+	while (i != num_p) {
+		if (p_pos[i].role == 0) {
+			goal_keeper_x = p_win->startx + p_pos[i].posX;
+			goal_keeper_y = p_win->starty + p_pos[i].posY;
+			mvaddch(goal_keeper_y, goal_keeper_x ,goal_keeper);
+		}else if (p_pos[i].role == 1){
+			defense_x =   p_win->startx + p_pos[i].posX;
+			defense_y = p_win->starty + p_pos[i].posY;
+			mvaddch(defense_y , defense_x, defense);
+		}else if(p_pos[i].role == 2){
+			attack_x = p_win->startx +  p_pos[i].posX;
+			attack_y =  p_win->starty + p_pos[i].posY;
+			mvaddch(attack_y, attack_x, attack);
 		}
-
-		game = game->next;
+		i++;
 	}
-
-	mvaddch(goal_keeper_y, goal_keeper_x + 2 ,goal_keeper);
-	mvaddch(defense_y, defense_x, defense);
-	mvaddch(defense_y + 10.5, defense_x, defense);
-	mvaddch(attack_y, attack_x, attack);
-	mvaddch(attack_y + 5.25, attack_x, attack);
-	mvaddch(attack_y + 10.5, attack_x, attack);
 	refresh();
 }
 void init_fld(WIN* p_win){

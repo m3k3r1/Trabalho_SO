@@ -1,0 +1,43 @@
+==24601== Memcheck, a memory error detector
+==24601== Copyright (C) 2002-2015, and GNU GPL'd, by Julian Seward et al.
+==24601== Using Valgrind-3.11.0 and LibVEX; rerun with -h for copyright info
+==24601== Command: ./client --leak-check=full
+==24601== 
+==24601== Syscall param write(buf) points to uninitialised byte(s)
+==24601==    at 0x52954A0: __write_nocancel (syscall-template.S:84)
+==24601==    by 0x4016E7: main (client.c:38)
+==24601==  Address 0xfff000018 is on thread 1's stack
+==24601==  in frame #1, created by main (client.c:9)
+==24601== 
+[USERNAME] : [PASSWORD] : [LOGIN SUCCESFULL]
+[?1049h[1;24r(B[m[4l[?7h[39;49m[?1h=[39;49m[37m[40m[H[2J[36m[40mPress F1 to exit(B[m[39;49m[37m[40m==24601== Invalid read of size 8
+==24601==    at 0x402052: init_players (usr_ui.c:53)
+==24601==    by 0x4017E0: main (client.c:54)
+==24601==  Address 0x1d7d878 is not stack'd, malloc'd or (recently) free'd
+==24601== 
+==24601== 
+==24601== Process terminating with default action of signal 11 (SIGSEGV)
+==24601==  Access not within mapped region at address 0x1D7D878
+==24601==    at 0x402052: init_players (usr_ui.c:53)
+==24601==    by 0x4017E0: main (client.c:54)
+==24601==  If you believe this happened as a result of a stack
+==24601==  overflow in your program's main thread (unlikely but
+==24601==  possible), you can try to increase the size of the
+==24601==  main thread stack using the --main-stacksize= flag.
+==24601==  The main thread stack size used in this run was 8388608.
+==24601== 
+==24601== HEAP SUMMARY:
+==24601==     in use at exit: 74,482 bytes in 329 blocks
+==24601==   total heap usage: 340 allocs, 11 frees, 88,578 bytes allocated
+==24601== 
+==24601== LEAK SUMMARY:
+==24601==    definitely lost: 0 bytes in 0 blocks
+==24601==    indirectly lost: 0 bytes in 0 blocks
+==24601==      possibly lost: 0 bytes in 0 blocks
+==24601==    still reachable: 74,482 bytes in 329 blocks
+==24601==         suppressed: 0 bytes in 0 blocks
+==24601== Rerun with --leak-check=full to see details of leaked memory
+==24601== 
+==24601== For counts of detected and suppressed errors, rerun with: -v
+==24601== Use --track-origins=yes to see where uninitialised values come from
+==24601== ERROR SUMMARY: 2 errors from 2 contexts (suppressed: 0 from 0)

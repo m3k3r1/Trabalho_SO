@@ -27,10 +27,18 @@ struct game_control_t {
     //bool have_b all;
 };
 
+typedef struct client_data_t client_data_t;
+struct client_data_t {
+    int role, posX, posY;
+    //bool have_b all;
+};
+
+int send_to_cli(game_control_t * head, int cli_fd, int numPlayers);
 void set_game(game_stat_t * game, game_control_t ** head, int sec);
 void movePlayer(game_control_t * player);
 void * PlayerMovement(void * arg);
 int moveCheck(int x, int y, game_control_t * head);
 int randNum(int min, int max);
+void initPlayers(game_stat_t * game, game_control_t ** head, int numDef, int numOff);
 
 #endif

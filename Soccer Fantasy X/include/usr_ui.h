@@ -21,7 +21,7 @@ typedef struct _WIN_struct {
 }WIN;
 
 void init_fld(WIN* p_win);
-void init_players(WIN* p_win, game_control_t* game);
+void init_players(WIN* p_win, client_data_t *p_pos,int num_p);
 void init_win_params(WIN *p_win);
 void create_box(WIN *win);
 

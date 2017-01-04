@@ -14,8 +14,7 @@ int main(int argc, char const *argv[]) {
     pthread_t curses;
     bool game_start = false;
     WIN win;
-    game_stat_t game;
-    game_control_t * head = NULL;
+    int numPlayers;
 
     signal(SIGUSR1, signal_handler_cli);
     signal(SIGALRM, signal_handler_cli);
@@ -47,23 +46,30 @@ int main(int argc, char const *argv[]) {
             read(cli_fd, &game_start, sizeof(game_start));
 
             if (game_start) {
-              read(cli_fd, &game, sizeof(game));
-              read(cli_fd, &head, sizeof(head));
-                    alarm(game.seconds);
+              if(read(cli_fd, &numPlayers, sizeof(numPlayers)) == -1)
+              {
+                perror("COULD NOT READ\n");
+                exit(1);
+              }
                     init_fld(&win);
-                    init_players(&win, head);
+                    //pthread_create(&curses,NULL, rdr_map(&win), NULL);
 
-                    while (EXIT) {
-                        pthread_create(&curses,NULL, rdr_map(&win), NULL);
-                        read(cli_fd, &game_start, sizeof(game_start));
+                    client_data_t p_pos[numPlayers];
+                    //pthread_create(&curses,NULL, rdr_map(&win), NULL);
+
+                    while(read(cli_fd, &p_pos,sizeof(p_pos)))
+                    {
+                      pthread_create(&curses,NULL, rdr_map(&win), NULL);
+                      init_players(&win,p_pos, numPlayers);
                     }
-                    EXIT = 0;
-                    endwin();
+
+
+                endwin();
                 break;
             }
         }
     }
-
+    endwin();
     close(cli_fd);
     close(srv_fd);
     unlink(cli_pipe_name);

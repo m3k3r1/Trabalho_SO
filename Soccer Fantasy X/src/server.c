@@ -61,8 +61,9 @@ int main(int argc, char *argv[]){
                 {
                     set_game(&game, &head, atoi(arg1));
                     write(cli_fd, &game_allow, sizeof(game_allow));
-                    write(cli_fd, &game, sizeof(game));
-                    write(cli_fd, &head, sizeof(head));
+                    write(cli_fd, &(game.numPlayers), sizeof(game.numPlayers));
+                    while(send_to_cli(head, cli_fd, game.numPlayers));
+                    
                 }else
                   if(!strcmp(cmd, "start") && !game_allow)
                     printf("[GAME]No players connected \n");
