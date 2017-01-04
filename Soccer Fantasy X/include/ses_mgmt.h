@@ -27,10 +27,8 @@ struct game_control_t {
     //bool have_b all;
 };
 
-void set_game(game_stat_t** head, int t);
-game_stat_t* new_game(int t);
-void startGame(game_stat_t * game, game_control_t ** head, int seconds);
-void move(game_control_t * player);
+void set_game(game_stat_t * game, game_control_t ** head, int sec);
+void movePlayer(game_control_t * player);
 void * PlayerMovement(void * arg);
 int moveCheck(int x, int y, game_control_t * head);
 int randNum(int min, int max);

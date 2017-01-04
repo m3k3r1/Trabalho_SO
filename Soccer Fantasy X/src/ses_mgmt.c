@@ -32,7 +32,7 @@ void * PlayerMovement(void * arg)
   game_control_t * player = (game_control_t *) arg;
   while(1)
   {
-    move(player);
+    movePlayer(player);
     switch(player->role)
     {
       case 0:
@@ -52,7 +52,7 @@ void * PlayerMovement(void * arg)
 }
 
 // MOVES AND CHECKS POSITION
-void move(game_control_t * player)
+void movePlayer(game_control_t * player)
 {
   int tmpX, tmpY;
 
@@ -73,68 +73,49 @@ void move(game_control_t * player)
   player->posY = tmpY;
 }
 
-void startGame(game_stat_t * game, game_control_t ** head, int seconds)
+void getNumPlayers(int * numDef, int * numOff)
 {
-  int numDef, numOff;
   char * ndef = NULL, * noff = NULL;
-  game_control_t * curr;
 
-  puts("set defenders");
-  // GET NUMBER OF DEFENDERS
+  // DEF ENV VAR
   ndef = getenv("NDEFESAS");
   if(ndef != NULL)
-    numDef = atoi(ndef);
+    * numDef = atoi(ndef);
   else
-    numDef = 2;
+    * numDef = 2;
 
-  puts("set attackers");
-  // GET NUMBER OF ATTACKERS
+  // OFF ENV VAR
   noff = getenv("NAVANCADOS");
   if(noff != NULL)
-    numOff = atoi(noff);
+    * numOff = atoi(noff);
   else
-    numOff = 2;
+    * numOff = 2;
+}
 
-  puts("set number of players");
-  // ASSIGN NUMBER OF PLAYERS
-  game->numPlayers = 1 + numDef + numOff;
+void initPlayers(game_stat_t * game, game_control_t ** head, int numDef)
+{
+  game_control_t *curr = NULL;
 
-  puts("set run game var");
-  // ASSIGN RUN GAME VAR
-  game->run = 1;
-
-  puts("set goals to 0");
-  // ASSIGN 0 TO GOALS
-  game->game_result[0] = 0;
-  game->game_result[1] = 0;
-
-  puts("outside for to player malloc");
-  for(int i = 0, j = 0; i < (game->numPlayers) * 2; i++)
+  for(int i = 0, j = 0; i < game->numPlayers * 2; i++)
   {
-    // PLAYER MALLOC
     if(!i)
     {
       * head = malloc(sizeof(game_control_t));
       curr = * head;
       curr->next = NULL;
       curr->head = * head;
-      puts("head alloc player");
     }
     else
     {
       curr->next = malloc(sizeof(game_control_t));
+      curr->next->next = NULL;
       curr = curr->next;
-      curr->next = NULL;
-      puts("new alloc player");
     }
 
-    puts("pos assignment");
-    // ASSIGN POSITION TODO
-    curr->posX = 2;
-    curr->posY = 2;
-
+    // TODO MIGHT NOT NEED
     curr->id = i;
-    // ASSIGN ROLE
+
+    // ROLE ASSIGNMENT
     // GOALKEEPER
     if(!j)
       curr->role = 0;
@@ -153,10 +134,26 @@ void startGame(game_stat_t * game, game_control_t ** head, int seconds)
     else
       j++;
 
-    puts("creating thread");
+    // PLAYER MOVEMENT THREAD
     pthread_create(&(curr->tid), NULL, PlayerMovement, curr);
-    //pthread_create(&(curr->tid), NULL, show, &numDef);
-    puts("thread created");
+
   }
-  // THREADS FOR PLAYERS??? TODO
+}
+
+void set_game(game_stat_t * game, game_control_t ** head, int sec)
+{
+  int numDef = 0,numOff = 0;
+  game->seconds = sec;
+
+  //  INITIALIZE NUMBER OF PLAYERS
+  getNumPlayers(&numDef, &numOff);
+  game->numPlayers = 1 + numDef + numOff;
+
+  // INITIALIZE GOALS VAR
+  game->game_result[0] = 0;
+  game->game_result[1] = 0;
+
+  //Initialize the players postions !!!TODO MICHAEL! DO SOMETHING PLS
+  initPlayers(game, head, numDef);
+
 }

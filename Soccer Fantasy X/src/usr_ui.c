@@ -40,17 +40,27 @@ void create_box(WIN *p_win){
 
 	refresh();
 }
-void init_players(WIN* p_win){
+void init_players(WIN* p_win, game_control_t* game){
+	int goal_keeper_x, goal_keeper_y, defense_x, defense_y, attack_x, attack_y
 	chtype goal_keeper = '0';
 	chtype defense = '1';
 	chtype attack = '2';
 
-	int goal_keeper_x = p_win->startx + 7*(p_win->width/8);
-	int goal_keeper_y = p_win->starty + p_win->height/2;
-	int defense_x =   p_win->startx + 3*(p_win->width/4);
-	int defense_y = p_win->starty + p_win->height/4;
-	int attack_x = p_win->startx +  5*((p_win->width/2)/4);
-	int attack_y =  p_win->starty + p_win->height/4;
+
+	while (game) {
+		if (game->role == 0) {
+			goal_keeper_x = p_win->startx + 7*(p_win->width/8);
+			goal_keeper_y = p_win->starty + p_win->height/2;
+		}else if (game->role == 1){
+			defense_x =   p_win->startx + 3*(p_win->width/4);
+			defense_y = p_win->starty + p_win->height/4;
+		}else if(game->role == 2){
+			attack_x = p_win->startx +  5*((p_win->width/2)/4);
+			attack_y =  p_win->starty + p_win->height/4;
+		}
+
+		game = game->next;
+	}
 
 	mvaddch(goal_keeper_y, goal_keeper_x + 2 ,goal_keeper);
 	mvaddch(defense_y, defense_x, defense);
@@ -72,8 +82,4 @@ void init_fld(WIN* p_win){
     printw("Press F1 to exit");
     refresh();
     attroff(COLOR_PAIR(1));
-    //create_box(p_win);
-    //init_players(p_win);
-
-
 };

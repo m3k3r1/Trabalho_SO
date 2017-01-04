@@ -57,12 +57,12 @@ int main(int argc, char *argv[]){
                     sign_in(arg1, arg2,file_name, custom_login_file);
                 }
 
-                if (!strcmp(cmd, "start") && game_allow) {
-                    puts("STARTING GAME\n");
-                    startGame(&game, &head, atoi(arg1));
-                    puts("GAME STARTED\n");
-
+                if (!strcmp(cmd, "start") && game_allow)
+                {
+                    set_game(&game, &head, atoi(arg1));
                     write(cli_fd, &game_allow, sizeof(game_allow));
+                    write(cli_fd, &game, sizeof(game));
+                    write(cli_fd, &head, sizeof(head));
                 }else
                   if(!strcmp(cmd, "start") && !game_allow)
                     printf("[GAME]No players connected \n");
