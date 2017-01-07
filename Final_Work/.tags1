@@ -4,4 +4,5 @@
 !_TAG_PROGRAM_NAME	Exuberant Ctags	//
 !_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
 !_TAG_PROGRAM_VERSION	5.9~svn20110310	//
-cmd_control	/home/h3x/Projects/Ccode/Trabalho_SO/Final_Work/src/base.c	/^void cmd_control(char *cmd, char* arg1, char* arg2){$/;"	function	line:3	signature:(char *cmd, char* arg1, char* arg2)
+srv_shutdown	/home/h3x/Projects/Ccode/Trabalho_SO/Final_Work/src/server.c	/^bool srv_shutdown = false;$/;"	variable	line:3
+main	/home/h3x/Projects/Ccode/Trabalho_SO/Final_Work/src/server.c	/^int main(int argc, char const *argv[])$/;"	function	line:5	signature:(int argc, char const *argv[])
