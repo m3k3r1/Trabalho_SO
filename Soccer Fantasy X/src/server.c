@@ -63,7 +63,7 @@ int main(int argc, char *argv[]){
                     write(cli_fd, &game_allow, sizeof(game_allow));
                     write(cli_fd, &(game.numPlayers), sizeof(game.numPlayers));
                     while(send_to_cli(head, cli_fd, game.numPlayers));
-                    
+
                 }else
                   if(!strcmp(cmd, "start") && !game_allow)
                     printf("[GAME]No players connected \n");

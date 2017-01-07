@@ -1,0 +1,49 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+BASE_H	include/base.h	2;"	d
+CC	Makefile	/^CC=gcc$/;"	m
+CFLAGS	Makefile	/^CFLAGS=-I$(IDIR) -Wall -g -lncurses -lpthread$/;"	m
+CLI_FIFO	include/base.h	17;"	d
+DEPS	Makefile	/^DEPS = $(patsubst %,$(IDIR)\/%,$(_DEPS))$/;"	m
+IDIR	Makefile	/^IDIR=include$/;"	m
+LOGIN_FILE	include/usr_mgmt.h	5;"	d
+OBJ	Makefile	/^OBJ= $(patsubst %,$(ODIR)\/%,$(_OBJ))$/;"	m
+ODIR	Makefile	/^ODIR=obj$/;"	m
+SRC	Makefile	/^SRC=src$/;"	m
+SRV_FIFO	include/base.h	16;"	d
+USR_MGMT_H	include/usr_mgmt.h	2;"	d
+_DEPS	Makefile	/^_DEPS = base.h usr_mgmt.h$/;"	m
+_OBJ	Makefile	/^_OBJ = server.o client.o usr_mgmt.o base.o$/;"	m
+add_user	src/usr_mgmt.c	/^user_t * add_user(char usr[20], int pid){$/;"	f
+auth	include/usr_mgmt.h	/^  bool auth;$/;"	m	struct:__anon2
+check_user	src/usr_mgmt.c	/^bool check_user(user_t * head ,char usr[20]){$/;"	f
+cli_info_t	include/base.h	/^} cli_info_t;$/;"	t	typeref:struct:__anon1
+cli_shutdown	src/client.c	/^bool cli_shutdown = false;$/;"	v
+cmd_control	src/base.c	/^void cmd_control(char *cmd, char* arg1, char* arg2){$/;"	f
+exit_warning	src/usr_mgmt.c	/^void exit_warning(user_t* list){$/;"	f
+free_mem	src/usr_mgmt.c	/^void free_mem(user_t * head) {$/;"	f
+list_player	src/usr_mgmt.c	/^int list_player(user_t * head){$/;"	f
+login_t	include/usr_mgmt.h	/^} login_t;$/;"	t	typeref:struct:__anon2
+logout_user	src/usr_mgmt.c	/^void logout_user(user_t ** head, siginfo_t * cli, void * context)$/;"	f
+main	src/client.c	/^int main(int argc, char const *argv[]) {$/;"	f
+main	src/server.c	/^int main(int argc, char const *argv[])$/;"	f
+next_usr	include/usr_mgmt.h	/^  user_t * next_usr;$/;"	m	struct:user_t
+pass	include/usr_mgmt.h	/^  char usr[20], pass[20];$/;"	m	struct:__anon2
+pid	include/base.h	/^  pid_t pid;$/;"	m	struct:__anon1
+pid	include/usr_mgmt.h	/^  pid_t pid;$/;"	m	struct:user_t
+save_user	src/usr_mgmt.c	/^bool save_user(user_t ** head, char usr[20], int pid){$/;"	f
+set_cred	src/usr_mgmt.c	/^void set_cred(char usr[20], char pass[20]){$/;"	f
+sign_up	src/usr_mgmt.c	/^void sign_up(char* new_usr, char* new_pwd, char* file_name, bool custom_file){$/;"	f
+signal_handler_cli	src/client.c	/^void signal_handler_cli(int sig){$/;"	f
+signal_handler_srv	src/server.c	/^void signal_handler_srv(int sig){$/;"	f
+srv_shutdown	src/server.c	/^bool srv_shutdown = false;$/;"	v
+user_t	include/usr_mgmt.h	/^struct user_t {$/;"	s
+user_t	include/usr_mgmt.h	/^typedef struct user_t user_t;$/;"	t	typeref:struct:user_t
+usr	include/usr_mgmt.h	/^  char usr[20], pass[20];$/;"	m	struct:__anon2
+usr_auth	src/usr_mgmt.c	/^bool usr_auth(char usr[20], char pass[20], char * file_name, bool custom_file){$/;"	f
+usr_name	include/usr_mgmt.h	/^  char usr_name[20];$/;"	m	struct:user_t
+write_to_clients	src/usr_mgmt.c	/^void write_to_clients(user_t * list, bool gamestart)$/;"	f
