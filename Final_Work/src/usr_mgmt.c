@@ -1,5 +1,6 @@
 #include "usr_mgmt.h"
 
+
 // LIST USERS LOGGED IN
 int list_player(user_t * head){
     int counter = 0;
@@ -154,13 +155,27 @@ void logout_user(user_t ** head, siginfo_t * cli, void * context)
 }
 
 // SENDS SIGNAL TO CLIENT EXIT
-void exit_warning(user_t* list){
+void exit_warning(user_t * list){
   while (list != NULL) {
     kill(list->pid, 10);
     list = list->next_usr;
   }
 }
 
+// SENDS GAME_T TO ALL CLI_FIFO
+void write_game_cli(user_t * list, game_t * game)
+{
+  char cli_pipe_name[20];
+  int cli_fd;
+
+  while(list)
+  {
+    sprintf(cli_pipe_name, CLI_FIFO, list->pid);
+    cli_fd = open(cli_pipe_name, O_WRONLY|O_CREAT, 0600);
+    write(cli_fd, &game, sizeof(game));
+    list = list->next_usr;
+  }
+}
 // SENDS SHIT TO USR
 void write_to_clients(user_t * list, bool gamestart)
 {

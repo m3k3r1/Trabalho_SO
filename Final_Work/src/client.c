@@ -6,12 +6,13 @@ bool cli_shutdown = false;
 int main(int argc, char const *argv[]) {
   int srv_fd, cli_fd;         // FIFO CONNECTION
   int tryHard = 0;            // TRY HARD VAR FOR CLIENT LOCKOUT
+  int n_bytes;
   char cli_pipe_name[20];     // CLIENT NAME WITH PID
-  bool game_start = false;
   login_t cli_log;            // USER CREDENTIALS
   pid_t cli_pid;              // CLIENT PID
   //pthread_t curses; TODO
   //WIN win; TODO
+  game_t game;
   // CLIENT AUTH BOOL
   cli_log.auth = false;
 
@@ -60,10 +61,11 @@ int main(int argc, char const *argv[]) {
       break;
   }
 
-  while (cli_log.auth && !cli_shutdown && 0) {
-    read(cli_fd, &game_start, sizeof(game_start));
+  while (cli_log.auth && !cli_shutdown) {
+    do {
+      n_bytes = read(cli_fd, &game, sizeof(game));
+    } while(n_bytes == 0 && !cli_shutdown);
 
-     if(game_start)
       puts("ITS ON");
     // LIST GAME
     // CONNECT TO GAME: TEAM NUM, PLAYER NUM

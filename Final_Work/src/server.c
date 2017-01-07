@@ -1,28 +1,6 @@
 #include "base.h"
 #include "usr_mgmt.h"
-
 bool srv_shutdown = false;
-
-/*
-typedef struct
-{
-  int seconds;
-  pthread_t tid;
-} game_t;
-
-void * runGame(void * arg)
-{
-  int i = 0;
-  game_t * game = (game_t *) arg;
-
-  while(i < game->seconds)
-    sleep(1);
-  // TERMINATE ALL THREADS AND USERS
-  // SHOW GOALS
-
-  pthread_exit(0);
-}
-*/
 
 int main(int argc, char const *argv[])
 {
@@ -33,7 +11,9 @@ int main(int argc, char const *argv[])
   bool  custom_login_file = false;    // BOOL IF SERVER IS STARTED WITH LOG FILE
   login_t cli_log;                    // USER CREDS STRUCT
   pid_t cli_pid;                      // CLIENT PID
-  user_t * user_list = NULL, * curr = NULL;          // USER LIST
+  user_t * user_list = NULL;          // USER LIST
+  game_t game;
+
   //struct sigaction act;
 
   // SELECT FOR KEYBOAD
@@ -98,20 +78,12 @@ int main(int argc, char const *argv[])
         if (!strcmp(cmd, "user"))
           sign_up(arg1, arg2,file_name, custom_login_file);
 
-        if(!strcmp(cmd, "start"))
+        if(!strcmp(cmd, "start") && strlen(arg1) > 0)
         {
           // RUN GAME FUNCTION
           puts("game start");
-          bool gamestart = true;
-          curr = user_list;
-          while(curr != NULL)
-          {
-            sprintf(cli_pipe_name, CLI_FIFO, curr->pid);
-            cli_fd = open(cli_pipe_name, O_WRONLY|O_CREAT, 0600);
-            write(cli_fd, &gamestart, sizeof(gamestart));
-            curr = curr->next_usr;
-          }
-        }
+          game.seconds = atoi(arg1);
+          write_game_cli(user_list, &game);
       }
 
       if (FD_ISSET(srv_fd, &conj)) // IN THE FIFO
@@ -158,6 +130,11 @@ int main(int argc, char const *argv[])
     }
   //} while(strcmp(cmd, "shutdown") && !srv_shutdown);
   } while(strcmp(cmd, "shutdown"));
+
+  // SEND 0 BYTES TO CLIENT SO HE CAN GET THE FUCK OUT OF THE READ
+  if(!strcmp(cmd, "shutdown"))
+    write_game_cli(user_list, NULL);
+
 
   // WARN USERS SERVER GOING TO SHUTDOWN
   exit_warning(user_list);
