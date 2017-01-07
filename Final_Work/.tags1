@@ -4,5 +4,13 @@
 !_TAG_PROGRAM_NAME	Exuberant Ctags	//
 !_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
 !_TAG_PROGRAM_VERSION	5.9~svn20110310	//
-srv_shutdown	/home/h3x/Projects/Ccode/Trabalho_SO/Final_Work/src/server.c	/^bool srv_shutdown = false;$/;"	variable	line:3
-main	/home/h3x/Projects/Ccode/Trabalho_SO/Final_Work/src/server.c	/^int main(int argc, char const *argv[])$/;"	function	line:5	signature:(int argc, char const *argv[])
+getNumPlayers	/home/h3x/Projects/Ccode/Trabalho_SO/Final_Work/src/game_mgmt.c	/^void getNumPlayers(int * numDef, int * numOff)$/;"	function	line:5	signature:(int * numDef, int * numOff)
+initPlayers	/home/h3x/Projects/Ccode/Trabalho_SO/Final_Work/src/game_mgmt.c	/^void initPlayers(game_t * game, int numDef, int numOff)$/;"	function	line:25	signature:(game_t * game, int numDef, int numOff)
+set_game	/home/h3x/Projects/Ccode/Trabalho_SO/Final_Work/src/game_mgmt.c	/^void set_game(game_t * game, int sec)$/;"	function	line:112	signature:(game_t * game, int sec)
+init_random_gen	/home/h3x/Projects/Ccode/Trabalho_SO/Final_Work/src/game_mgmt.c	/^void init_random_gen()$/;"	function	line:132
+randNum	/home/h3x/Projects/Ccode/Trabalho_SO/Final_Work/src/game_mgmt.c	/^int randNum(int min, int max)$/;"	function	line:138	signature:(int min, int max)
+moveCheck	/home/h3x/Projects/Ccode/Trabalho_SO/Final_Work/src/game_mgmt.c	/^int moveCheck(int x, int y, player_t * head)$/;"	function	line:144	signature:(int x, int y, player_t * head)
+movePlayer	/home/h3x/Projects/Ccode/Trabalho_SO/Final_Work/src/game_mgmt.c	/^void movePlayer(player_t * player)$/;"	function	line:160	signature:(player_t * player)
+playerMovement	/home/h3x/Projects/Ccode/Trabalho_SO/Final_Work/src/game_mgmt.c	/^void * playerMovement(void * arg)$/;"	function	line:180	signature:(void * arg)
+showMap	/home/h3x/Projects/Ccode/Trabalho_SO/Final_Work/src/game_mgmt.c	/^void showMap(player_t * p_list)$/;"	function	line:207	signature:(player_t * p_list)
+runGame	/home/h3x/Projects/Ccode/Trabalho_SO/Final_Work/src/game_mgmt.c	/^void * runGame(void * arg)$/;"	function	line:234	signature:(void * arg)
