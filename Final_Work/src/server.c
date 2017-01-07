@@ -82,8 +82,10 @@ int main(int argc, char const *argv[])
         {
           // RUN GAME FUNCTION
           puts("game start");
-          game.seconds = atoi(arg1);
-          write_game_cli(user_list, &game);
+          set_game(&game, atoi(arg1));
+          pthread_create(&(game.tid), NULL, runGame, (void *) &game);
+          //write_game_cli(user_list, &game);
+        }
       }
 
       if (FD_ISSET(srv_fd, &conj)) // IN THE FIFO
