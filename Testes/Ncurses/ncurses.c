@@ -22,7 +22,7 @@ void clean_pos( WINDOW ** f){
 
         wattron(*f,COLOR_PAIR(2));
         pthread_mutex_lock(&lock);
-        mvwprintw(*f, y, x, "X");
+        mvwprintw(*f, y, x, " ");
         pthread_mutex_unlock(&lock);
         wattroff(*f,COLOR_PAIR(2));
 
