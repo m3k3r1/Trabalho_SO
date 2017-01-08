@@ -175,54 +175,42 @@ void movePlayer(player_t * player)
       tmpY = randNum(tmpY - 1, tmpY + 1);
     } while(tmpY < 0 || tmpY >= HEIGHT);
   } while(moveCheck(tmpX, tmpY, player->head));
+
+  player->posX = tmpX;
+  player->posY = tmpY;
 }
 
 // PLAYER MOVEMENT THREAD FUNCTION
 void * playerMovement(void * arg)
 {
-    char cli_pipe_name[20];
-    int cli_fd;
-  data_cli_t * data_cli = (data_cli_t *) arg;
-  player_t * player = (player_t *) data_cli->player;
-  user_t * user_list = (user_t *) data_cli->user_list;
-  cli_player_t tmp_player;
+  // PTRS
+  player_t * player = (player_t *) arg;
+  //player_t * head = (player_t *) arg->player_list
+  //user_t * curr_user = (user_t *) arg->user_list;
 
   while(player->run)
   {
     // NEW POSITION
     movePlayer(player);
-    puts("Asd");
-    if(player->id == 4)
-      printf("X: %d, Y: %d\n", player->posX, player->posY);
-
-    // COPY TO TMP PLAYER STRUCT
-    tmp_player.posX = player->posX;
-    tmp_player.posY = player->posY;
-    tmp_player.role = player->role;
-    tmp_player.id = player->id;
-
-    // FUCK YOU DINESH
-    while (user_list) {
-        sprintf(cli_pipe_name, CLI_FIFO, user_list->pid);
-        cli_fd = open(cli_pipe_name, O_WRONLY|O_CREAT, 0600);
-        write(cli_fd, &tmp_player, sizeof(tmp_player));
-    }
-
+      printf("ID: %d, X: %d, Y: %d\n", player->id, player->posX, player->posY);
     switch(player->role)
     {
       case 0:
 
-        sleep(1);
+        sleep(0.3);
         break;
 
       case 1:
-        sleep(2);
+        sleep(0.4);
         break;
 
       case 2:
-        sleep(1);
+        sleep(0.3);
         break;
     }
+
+    // SEND TO CLIENT
+
   }
 
   pthread_exit(0);
@@ -241,7 +229,6 @@ void * runGame(void * arg)
   {
     sleep(1);
     puts("game is running");
-    //showMap(game->p_list);
     i++;
   }
 
@@ -249,14 +236,14 @@ void * runGame(void * arg)
   while(curr != NULL)
   {
     curr->run = 0;
+    pthread_join(curr->tid, &curr->retval);
     curr = curr->next;
   }
 
-  // FREE PLAYER LIST
+  // FREE PLAYER STRUCT
   curr = game->p_list;
-  while(curr != NULL)
+  while(curr)
   {
-    pthread_join(curr->tid, NULL);
     tmp = curr->next;
     free(curr);
     curr = tmp;

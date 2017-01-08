@@ -18,6 +18,9 @@ int main(int argc, char const *argv[])
 
   // TMP VARS
   data_cli_t  data_cli ;      // DATA STRUCT FOR CLIENT
+  cli_game_t c_game;
+  cli_player_t player;
+  player_t * curr_player = NULL;
 
   //struct sigaction act;
   game.p_list = NULL;
@@ -93,54 +96,54 @@ int main(int argc, char const *argv[])
           // SET GAME DATA
           set_game(&game, atoi(arg1));
 
-          // SEND GAME DATA
-          //write_game_cli(user_list, &game);
-
           // CREATE GAME THREAD
-          //pthread_create(&(game.tid), NULL, runGame, (void *) &game);
+          pthread_create(&(game.tid), NULL, runGame, (void *) &game);
 
-          // CREATE GAME PLAYER MOVEMENT THREAD FOR EACH ONE
-          //data_cli.player = game.p_list;
-          
-          for(int i = 0; i < game.numPlayers; i++)
+          // CREATE GAME PLAYER MOVEMENT THREADS
+          curr_player = game.p_list;
+          while(curr_player)
           {
-            pthread_create(&(data_cli.player->tid), NULL, playerMovement, &data_cli);
-            data_cli.player = data_cli.player->next;
-          }
-
-          player_t * curr = game.p_list, * tmp = NULL;
-          while(curr)
-          {
-            printf("CURR: %p, curr->next: %p, curr->head: %p\n",
-                  curr, curr->next, curr->head);
-            curr = curr->next;
+            pthread_create(&(curr_player->tid), NULL, playerMovement, (void *) curr_player);
+            curr_player = curr_player->next;
           }
 
-          sleep(4);
-          while(curr)
-          {
-            curr->run = 0;
-            curr = curr->next;
-          }
-          curr = game.p_list;
-          while(curr != NULL)
-          {
-            tmp = curr->next;
-            free(curr);
-            curr = tmp;
-          }
-          tmp = NULL;
+          user_t *list = user_list;
+          game_t game_tmp  = game;
 /*
-          while(data_cli.player)
-          {
-            // GAME PLAYER MOVEMENT THREAD
-            pthread_create(&(data_cli.player->tid), NULL, playerMovement, &data_cli);
-            printf("CURR: %p, curr->next: %p, curr->head: %p\n",
-                    data_cli.player, data_cli.player->next, data_cli.player->head);
+          while (list) {
+            sprintf(cli_pipe_name , CLI_FIFO, list->pid);
+            cli_fd = open(cli_pipe_name, O_WRONLY|O_CREAT, 0600);
 
-            data_cli.player = data_cli.player->next;
+            int i = 0;
+
+            c_game.seconds = game_tmp.seconds;
+            c_game.numPlayers = game_tmp.numPlayers;
+            for (size_t x = 0; x < 2; x++) {
+              c_game.res[i] = game.res[i];
+            }
+
+            write(cli_fd, &c_game, sizeof(c_game));
+
+
+            while (i != 10) {
+              player.posX = game_tmp.p_list->posX;
+              player.posY = game_tmp.p_list->posY;
+              player.role = game_tmp.p_list->role;
+              player.id = game_tmp.p_list->id;
+
+                write(cli_fd, &player, sizeof(player));
+              i++;
+
+              game_tmp.p_list = game_tmp.p_list->next;
+            }
+
+
+
+            list= list->next_usr;
           }
-*/
+          */
+          pthread_join(game.tid, &(game.retval));
+
         }
       }
 

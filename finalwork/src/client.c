@@ -92,10 +92,10 @@ int main(int argc, char const *argv[]) {
     } while(n_bytes == 0 && !cli_shutdown);
 
     // CLI PLAYER STRUCT MALLOC
-    player_list = malloc(sizeof(cli_player_t) * game.numPlayers);
-    thd_cli = malloc(sizeof(struct thread_data) * game.numPlayers);
+    player_list = malloc(sizeof(cli_player_t) * game.numPlayers*2);
+    thd_cli = malloc(sizeof(struct thread_data) * game.numPlayers*2);
     // READS FROM SRV ALL GAME PLAYER DATA
-    for(int i = 0; i < game.numPlayers; i++)
+    for(int i = 0; i < game.numPlayers * 2; i++)
     {
       read(cli_fd, &player_list[i], sizeof(cli_player_t));
       thd_cli[i].p.x = player_list[i].posX;
@@ -128,7 +128,7 @@ int main(int argc, char const *argv[]) {
 
     field = crt_win( height,  width,  start_x,  start_y);
 
-    for (size_t i = 0; i < game.numPlayers; i++) {
+    for (size_t i = 0; i < game.numPlayers * 2; i++) {
         thd_cli[i].field = field;
         pthread_create(&p_pos[i], NULL, thread_mgmt, &thd_cli[i]);
     }
@@ -150,7 +150,7 @@ int main(int argc, char const *argv[]) {
     } while( ch != 'q');
 
     EXIT = 1;
-    for (size_t i = 0; i < game.numPlayers; i++)
+    for (size_t i = 0; i < game.numPlayers*2; i++)
         pthread_join(p_pos[i], NULL);
   }
 

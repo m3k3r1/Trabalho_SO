@@ -17,8 +17,9 @@ struct player_t
 {
   int role, id;             // PLAYER ROLE AND ID
   int posX, posY;           // PLAYER POS
-  int run;              // GAME SECONDS
+  int run;                  // GAME SECONDS
   pthread_t tid;            // PLAYER MOVEMENT THREAD
+  void * retval;
   player_t * next, * head;  // NEXT PLAYER PTR
 };
 
@@ -30,12 +31,13 @@ typedef struct
   int numPlayers;     // GAME PLAYER NUM
   player_t * p_list;  // GAME PLAYER LIST
   pthread_t tid;      // TID FOR GAME FUNCTION
+  void * retval;
 } game_t;
 
 // POSITION DATA STRUCT FOR CLIENT
 typedef struct
 {
-  player_t * player;
+  player_t * player_list;
   user_t * user_list;
 } data_cli_t;
 
