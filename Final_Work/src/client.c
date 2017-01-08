@@ -5,6 +5,15 @@ bool cli_shutdown = false;
 int EXIT = 0;
 pthread_mutex_t lock;
 
+struct pos{
+    int x, y;
+};
+
+struct thread_data{
+    WINDOW *field;
+    struct pos p;
+};
+
 WINDOW* crt_win(int height, int width, int start_x, int start_y);
 void move_pl(WINDOW* field, int y, int x);
 int rand_p(int min ,int max);
@@ -20,8 +29,9 @@ int main(int argc, char const *argv[]) {
   login_t cli_log;            // USER CREDENTIALS
   pid_t cli_pid;              // CLIENT PID
   WINDOW * field;
-  pthread_t *player_pos;
-pthread_mutex_init(&lock, NULL);
+  pthread_t p_pos[20];
+  pthread_mutex_init(&lock, NULL);
+  struct thread_data *thd_cli = NULL;
   cli_game_t game;
   cli_player_t * player_list = NULL;
   // CLIENT AUTH BOOL
@@ -83,11 +93,13 @@ pthread_mutex_init(&lock, NULL);
 
     // CLI PLAYER STRUCT MALLOC
     player_list = malloc(sizeof(cli_player_t) * game.numPlayers);
-
+    thd_cli = malloc(sizeof(struct thread_data) * game.numPlayers);
     // READS FROM SRV ALL GAME PLAYER DATA
     for(int i = 0; i < game.numPlayers; i++)
     {
       read(cli_fd, &player_list[i], sizeof(cli_player_t));
+      thd_cli[i].p.x = player_list[i].posX;
+      thd_cli[i].p.y = player_list[i].posY;
 
     // LIST GAME
     // CONNECT TO GAME: TEAM NUM, PLAYER NUM
@@ -98,16 +110,16 @@ pthread_mutex_init(&lock, NULL);
     int ret;
 
     initscr();			/* Start curses mode 		*/
-      cbreak();			/* Line buffering disabled, Pass on  everty thing to me 		*/
-      keypad(stdscr, TRUE);		/* I need that nifty F1 	*/
+    cbreak();			/* Line buffering disabled, Pass on  everty thing to me 		*/
+    keypad(stdscr, TRUE);		/* I need that nifty F1 	*/
     noecho();
     curs_set(0);
     start_color();
     init_pair(1, COLOR_RED, COLOR_BLACK);
     init_pair(2, COLOR_GREEN, COLOR_BLACK);
 
-       start_y = (LINES - height) / 2;	/* Calculating for a center placement */
-        start_x = (COLS - width) / 2;	/* of the window		*/
+    start_y = (LINES - height) / 2;	/* Calculating for a center placement */
+    start_x = (COLS - width) / 2;	/* of the window		*/
 
     attron(COLOR_PAIR(1));
        printw("Press q to exit");
@@ -116,9 +128,9 @@ pthread_mutex_init(&lock, NULL);
 
     field = crt_win( height,  width,  start_x,  start_y);
 
-    for (size_t i = 0; i < 5; i++) {
-        srand(time(NULL));
-        //pthread_create(&p_pos[i], NULL, thread_mgmt, (void *)field);
+    for (size_t i = 0; i < game.numPlayers; i++) {
+        thd_cli[i].field = field;
+        pthread_create(&p_pos[i], NULL, thread_mgmt, &thd_cli[i]);
     }
 
     do {
@@ -138,11 +150,9 @@ pthread_mutex_init(&lock, NULL);
     } while( ch != 'q');
 
     EXIT = 1;
-    for (size_t i = 0; i < 5; i++) {
-    //    pthread_join(p_pos[i], NULL);
-    }
 
-
+    for (size_t i = 0; i < game.numPlayers; i++)
+        pthread_join(p_pos[i], NULL);
   }
 
   // CLOSE FIFO CONNECTION
@@ -179,17 +189,15 @@ void move_pl(WINDOW* field, int y, int x){
 int rand_p(int min ,int max){
     return min + rand() % (max - min + 1);
 }
-/*
-void* thread_mgmt( void *p){
-  //  struct pos players;
-    WINDOW *field = (WINDOW *) p;
+
+void * thread_mgmt( void *p){
+    struct thread_data *data = (struct thread_data *) p;
+
 
     do {
-        players.x = rand_p(1, 49);
-        players.y = rand_p(1, 19);
         pthread_mutex_lock(&lock);
-        move_pl(field, players.y, players.x);
-        wrefresh(field);
+        move_pl(data->field, data->p.y, data->p.x);
+        wrefresh(data->field);
         pthread_mutex_unlock(&lock);
 
         //SPEED
@@ -198,7 +206,7 @@ void* thread_mgmt( void *p){
 
     pthread_exit(0);
 }
-*/
+
 void clean_pos( WINDOW ** f){
     for (size_t y = 1; y < 20; y++) {
         for (size_t x = 1; x < 50; x++) {

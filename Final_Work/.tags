@@ -33,6 +33,7 @@ cmd_control	src/base.c	/^void cmd_control(char *cmd, char* arg1, char* arg2){$/;
 crt_win	src/client.c	/^WINDOW* crt_win(int height, int width, int start_x, int start_y){$/;"	f
 data_cli_t	include/game_mgmt.h	/^} data_cli_t;$/;"	t	typeref:struct:__anon2
 exit_warning	src/usr_mgmt.c	/^void exit_warning(user_t * list){$/;"	f
+field	src/client.c	/^    WINDOW *field;$/;"	m	struct:thread_data	file:
 free_mem	src/usr_mgmt.c	/^void free_mem(user_t * head) {$/;"	f
 game_t	include/game_mgmt.h	/^} game_t;$/;"	t	typeref:struct:__anon1
 getNumPlayers	src/game_mgmt.c	/^void getNumPlayers(int * numDef, int * numOff)$/;"	f
@@ -54,6 +55,7 @@ next	include/game_mgmt.h	/^  player_t * next, * head;  \/\/ NEXT PLAYER PTR$/;"	
 next_usr	include/game_mgmt.h	/^  user_t * next_usr;$/;"	m	struct:user_t
 numPlayers	include/game_mgmt.h	/^  int numPlayers;     \/\/ GAME PLAYER NUM$/;"	m	struct:__anon1
 numPlayers	include/game_mgmt.h	/^  int numPlayers;$/;"	m	struct:__anon3
+p	src/client.c	/^    struct pos p;$/;"	m	struct:thread_data	typeref:struct:thread_data::pos	file:
 p_list	include/game_mgmt.h	/^  player_t * p_list;  \/\/ GAME PLAYER LIST$/;"	m	struct:__anon1
 pass	include/usr_mgmt.h	/^  char usr[20], pass[20];$/;"	m	struct:__anon6
 pid	include/base.h	/^  pid_t pid;$/;"	m	struct:__anon5
@@ -62,6 +64,7 @@ player	include/game_mgmt.h	/^  player_t * player;$/;"	m	struct:__anon2
 playerMovement	src/game_mgmt.c	/^void * playerMovement(void * arg)$/;"	f
 player_t	include/game_mgmt.h	/^struct player_t$/;"	s
 player_t	include/game_mgmt.h	/^typedef struct player_t player_t;$/;"	t	typeref:struct:player_t
+pos	src/client.c	/^struct pos{$/;"	s	file:
 posX	include/game_mgmt.h	/^  int posX, posY, role, id;$/;"	m	struct:__anon4
 posX	include/game_mgmt.h	/^  int posX, posY;           \/\/ PLAYER POS$/;"	m	struct:player_t
 posY	include/game_mgmt.h	/^  int posX, posY, role, id;$/;"	m	struct:__anon4
@@ -83,6 +86,8 @@ sign_up	src/usr_mgmt.c	/^void sign_up(char* new_usr, char* new_pwd, char* file_n
 signal_handler_cli	src/client.c	/^void signal_handler_cli(int sig){$/;"	f
 signal_handler_srv	src/server.c	/^void signal_handler_srv(int sig){$/;"	f
 srv_shutdown	src/server.c	/^bool srv_shutdown = false;$/;"	v
+thread_data	src/client.c	/^struct thread_data{$/;"	s	file:
+thread_mgmt	src/client.c	/^void * thread_mgmt( void *p){$/;"	f
 tid	include/game_mgmt.h	/^  pthread_t tid;            \/\/ PLAYER MOVEMENT THREAD$/;"	m	struct:player_t
 tid	include/game_mgmt.h	/^  pthread_t tid;      \/\/ TID FOR GAME FUNCTION$/;"	m	struct:__anon1
 user_list	include/game_mgmt.h	/^  user_t * user_list;$/;"	m	struct:__anon2
@@ -93,3 +98,5 @@ usr_auth	src/usr_mgmt.c	/^bool usr_auth(char usr[20], char pass[20], char * file
 usr_name	include/game_mgmt.h	/^  char usr_name[20];$/;"	m	struct:user_t
 write_game_cli	src/usr_mgmt.c	/^void write_game_cli(user_t * list, game_t * game)$/;"	f
 write_to_clients	src/usr_mgmt.c	/^void write_to_clients(user_t * list, bool gamestart)$/;"	f
+x	src/client.c	/^    int x, y;$/;"	m	struct:pos	file:
+y	src/client.c	/^    int x, y;$/;"	m	struct:pos	file:
