@@ -12,7 +12,8 @@ int main(int argc, char const *argv[]) {
   pid_t cli_pid;              // CLIENT PID
   //pthread_t curses; TODO
   //WIN win; TODO
-  game_t game;
+  cli_game_t game;
+  cli_player_t * player_list = NULL;
   // CLIENT AUTH BOOL
   cli_log.auth = false;
 
@@ -51,24 +52,37 @@ int main(int argc, char const *argv[]) {
     read(cli_fd, &cli_log.auth, sizeof(cli_log.auth));
     printf("%s\n", cli_log.auth ? "[LOGIN SUCCESFULL]" : "[LOGIN FAILED]");
 
+    // CLIENT CREDS ARE INVALID
     if((!cli_log.auth))
     {
       fprintf(stderr, "Username and/or password not valid\n");
       tryHard++;
     }
 
+    // TRYHARD FOR NO MORE THAN 3 LOGIN ATTEMPTS
     if(tryHard > 3)
       break;
   }
 
+  // AFTER LOGGED IN
   while (cli_log.auth && !cli_shutdown) {
+    // READ CLIENT GAME STRUCT
     do {
       n_bytes = read(cli_fd, &game, sizeof(game));
     } while(n_bytes == 0 && !cli_shutdown);
 
-      puts("ITS ON");
+    // CLI PLAYER STRUCT MALLOC
+    player_list = malloc(sizeof(cli_player_t) * game.numPlayers);
+
+    // READS FROM SRV ALL GAME PLAYER DATA
+    for(int i = 0; i < game.numPlayers; i++)
+    {
+      read(cli_fd, &player_list[i], sizeof(cli_player_t));
+
+
     // LIST GAME
     // CONNECT TO GAME: TEAM NUM, PLAYER NUM
+    }
   }
 
   // CLOSE FIFO CONNECTION

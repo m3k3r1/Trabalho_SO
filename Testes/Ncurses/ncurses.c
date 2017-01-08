@@ -43,20 +43,20 @@ int main(int argc, char const *argv[]) {
     int ret;
 
     initscr();			/* Start curses mode 		*/
-	cbreak();			/* Line buffering disabled, Pass on  everty thing to me 		*/
-	keypad(stdscr, TRUE);		/* I need that nifty F1 	*/
+	  cbreak();			/* Line buffering disabled, Pass on  everty thing to me 		*/
+	  keypad(stdscr, TRUE);		/* I need that nifty F1 	*/
     noecho();
     curs_set(0);
     start_color();
     init_pair(1, COLOR_RED, COLOR_BLACK);
     init_pair(2, COLOR_GREEN, COLOR_BLACK);
 
-	start_y = (LINES - height) / 2;	/* Calculating for a center placement */
-	start_x = (COLS - width) / 2;	/* of the window		*/
+	   start_y = (LINES - height) / 2;	/* Calculating for a center placement */
+	    start_x = (COLS - width) / 2;	/* of the window		*/
 
     attron(COLOR_PAIR(1));
-	printw("Press q to exit");
-	refresh();
+	   printw("Press q to exit");
+	    refresh();
 	attroff(COLOR_PAIR(1));
 
     field = crt_win( height,  width,  start_x,  start_y);

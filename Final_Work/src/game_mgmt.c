@@ -1,5 +1,6 @@
 #include "game_mgmt.h"
 
+
 //  SETUP GAME FUNCTIONS
 // GET GAME PLAYERS NUM ENV VAR. IF NOT, USE STANDART
 void getNumPlayers(int * numDef, int * numOff)
@@ -100,11 +101,11 @@ void initPlayers(game_t * game, int numDef, int numOff)
     else
       j++;
 
+    // SET PLAYER ID
+    curr->id = i;
+
     // GAME PLAYER CONTROL VAR FOR THREAD FUNC
     curr->run = 1;
-
-    // GAME PLAYER MOVEMENT THREAD
-    pthread_create(&(curr->tid), NULL, playerMovement, curr);
   }
 }
 
@@ -175,19 +176,31 @@ void movePlayer(player_t * player)
   } while(moveCheck(tmpX, tmpY, player->head));
 }
 
-
 // PLAYER MOVEMENT THREAD FUNCTION
 void * playerMovement(void * arg)
 {
-  player_t * player = (player_t *) arg;
+  data_cli_t * data_cli = (data_cli_t *) arg;
+  player_t * player = (player_t *) data_cli->player;
+  user_t * user_list = (user_t *) data_cli->user_list;
+  cli_player_t tmp_player;
 
   while(player->run)
   {
     // NEW POSITION
     movePlayer(player);
+
+    // COPY TO TMP PLAYER STRUCT
+    tmp_player.posX = player->posX;
+    tmp_player.posY = player->posY;
+    tmp_player.role = player->role;
+    tmp_player.id = player->id;
+
+    // WRITE FUNCTION TO SEND TMP PLAYER TO THE CLI FIFO TODO DINESH
+
     switch(player->role)
     {
       case 0:
+
         sleep(1);
         break;
 
@@ -230,6 +243,7 @@ void showMap(player_t * p_list)
     putchar('\n');
   }
 }
+
 // THREAD FUNCTION FOR GAME CONTROL
 void * runGame(void * arg)
 {

@@ -12,7 +12,10 @@ int main(int argc, char const *argv[])
   login_t cli_log;                    // USER CREDS STRUCT
   pid_t cli_pid;                      // CLIENT PID
   user_t * user_list = NULL;          // USER LIST
-  game_t game;
+  game_t game;                        // GAME STRUCT
+
+  // TMP VARS
+  data_cli_t * data_cli = NULL;       // DATA STRUCT FOR CLIENT
 
   //struct sigaction act;
 
@@ -78,13 +81,31 @@ int main(int argc, char const *argv[])
         if (!strcmp(cmd, "user"))
           sign_up(arg1, arg2,file_name, custom_login_file);
 
+        // START GAME
         if(!strcmp(cmd, "start") && strlen(arg1) > 0)
         {
-          // RUN GAME FUNCTION
-          puts("game start");
+          puts("game start"); // DEBUG
+          // ASSIGN DATA STRUCT FOR CLI
+          data_cli->user_list = user_list;
+
+          // SET GAME DATA
           set_game(&game, atoi(arg1));
+
+          // SEND GAME DATA
+          write_game_cli(user_list, &game);
+
+          // CREATE GAME THREAD
           pthread_create(&(game.tid), NULL, runGame, (void *) &game);
-          //write_game_cli(user_list, &game);
+
+          // CREATE GAME PLAYER MOVEMENT THREAD FOR EACH ONE
+          data_cli->player = game.p_list;
+          while(data_cli->player)
+          {
+            // GAME PLAYER MOVEMENT THREAD
+            pthread_create(&(data_cli->player->tid), NULL, playerMovement, &data_cli);
+
+            data_cli->player = data_cli->player->next;
+          }
         }
       }
 
@@ -136,7 +157,6 @@ int main(int argc, char const *argv[])
   // SEND 0 BYTES TO CLIENT SO HE CAN GET THE FUCK OUT OF THE READ
   if(!strcmp(cmd, "shutdown"))
     write_game_cli(user_list, NULL);
-
 
   // WARN USERS SERVER GOING TO SHUTDOWN
   exit_warning(user_list);

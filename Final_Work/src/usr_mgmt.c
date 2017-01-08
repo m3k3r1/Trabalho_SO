@@ -165,14 +165,42 @@ void exit_warning(user_t * list){
 // SENDS GAME_T TO ALL CLI_FIFO
 void write_game_cli(user_t * list, game_t * game)
 {
+  player_t * curr = game->p_list;
+  cli_game_t game_tmp;
+  cli_player_t p_tmp;
   char cli_pipe_name[20];
   int cli_fd;
 
+  // ASSIGN DATA TO CLIENT GAME STRUCT
+  game_tmp.seconds = game->seconds;
+  game_tmp.numPlayers = game->numPlayers;
+  for(int i = 0; i < 2; i++)
+    game_tmp.res[i] = game->res[i];
+
+
+
+  // SEND CLIENT PLAYER STRUCT
   while(list)
   {
     sprintf(cli_pipe_name, CLI_FIFO, list->pid);
     cli_fd = open(cli_pipe_name, O_WRONLY|O_CREAT, 0600);
-    write(cli_fd, &game, sizeof(game));
+
+    // SEND CLIENT GAME STRUCT
+    write(cli_fd, &game_tmp, sizeof(game_tmp));
+
+    // ASSIGN POSITION
+    while(curr)
+    {
+      p_tmp.role = curr->role;
+      p_tmp.posX = curr->posX;
+      p_tmp.posY = curr->posY;
+      p_tmp.id = curr->id;
+
+      write(cli_fd, &p_tmp, sizeof(p_tmp));
+      curr = curr->next;
+    }
+
+    // NEXT USER/CLIENT
     list = list->next_usr;
   }
 }
