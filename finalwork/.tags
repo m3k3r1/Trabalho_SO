@@ -87,7 +87,7 @@ signal_handler_cli	src/client.c	/^void signal_handler_cli(int sig){$/;"	f
 signal_handler_srv	src/server.c	/^void signal_handler_srv(int sig){$/;"	f
 srv_shutdown	src/server.c	/^bool srv_shutdown = false;$/;"	v
 thread_data	src/client.c	/^struct thread_data{$/;"	s	file:
-thread_mgmt	src/client.c	/^void * thread_mgmt( void *p){$/;"	f
+thread_mgmt	src/client.c	/^void* thread_mgmt( void *p){$/;"	f
 tid	include/game_mgmt.h	/^  pthread_t tid;            \/\/ PLAYER MOVEMENT THREAD$/;"	m	struct:player_t
 tid	include/game_mgmt.h	/^  pthread_t tid;      \/\/ TID FOR GAME FUNCTION$/;"	m	struct:__anon1
 user_list	include/game_mgmt.h	/^  user_t * user_list;$/;"	m	struct:__anon2

@@ -20,7 +20,7 @@ int main(int argc, char const *argv[])
   data_cli_t  data_cli ;      // DATA STRUCT FOR CLIENT
 
   //struct sigaction act;
-
+  game.p_list = NULL;
   // SELECT FOR KEYBOAD
   fd_set conj;
   struct timeval tempo;
@@ -87,14 +87,60 @@ int main(int argc, char const *argv[])
         if(!strcmp(cmd, "start") && strlen(arg1) > 0)
         {
           puts("game start"); // DEBUG
+          // ASSIGN DATA STRUCT FOR CLI
+          data_cli.user_list = user_list;
 
           // SET GAME DATA
+          set_game(&game, atoi(arg1));
 
           // SEND GAME DATA
+          //write_game_cli(user_list, &game);
 
           // CREATE GAME THREAD
+          //pthread_create(&(game.tid), NULL, runGame, (void *) &game);
 
           // CREATE GAME PLAYER MOVEMENT THREAD FOR EACH ONE
+          //data_cli.player = game.p_list;
+          
+          for(int i = 0; i < game.numPlayers; i++)
+          {
+            pthread_create(&(data_cli.player->tid), NULL, playerMovement, &data_cli);
+            data_cli.player = data_cli.player->next;
+          }
+
+          player_t * curr = game.p_list, * tmp = NULL;
+          while(curr)
+          {
+            printf("CURR: %p, curr->next: %p, curr->head: %p\n",
+                  curr, curr->next, curr->head);
+            curr = curr->next;
+          }
+
+          sleep(4);
+          while(curr)
+          {
+            curr->run = 0;
+            curr = curr->next;
+          }
+          curr = game.p_list;
+          while(curr != NULL)
+          {
+            tmp = curr->next;
+            free(curr);
+            curr = tmp;
+          }
+          tmp = NULL;
+/*
+          while(data_cli.player)
+          {
+            // GAME PLAYER MOVEMENT THREAD
+            pthread_create(&(data_cli.player->tid), NULL, playerMovement, &data_cli);
+            printf("CURR: %p, curr->next: %p, curr->head: %p\n",
+                    data_cli.player, data_cli.player->next, data_cli.player->head);
+
+            data_cli.player = data_cli.player->next;
+          }
+*/
         }
       }
 

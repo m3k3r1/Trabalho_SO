@@ -33,17 +33,17 @@ void initPlayers(game_t * game, int numDef, int numOff)
     // CREATE MALLOC FOR PLAYER DATA
     if(!i)
     {
-      game->p_list = malloc(sizeof(player_t));
-      curr = game->p_list;
-      curr->head = game->p_list;
+      curr = malloc(sizeof(player_t));
+      curr->head = curr;
       curr->next = NULL;
+      game->p_list = curr;
     }
     else
     {
       curr->next = malloc(sizeof(player_t));
       curr = curr->next;
-      curr->head = game->p_list;
       curr->next = NULL;
+      curr->head = game->p_list;
     }
 
     //  FILL PLAYER DATA
@@ -114,7 +114,6 @@ void initPlayers(game_t * game, int numDef, int numOff)
 void set_game(game_t * game, int sec)
 {
   int numDef = 0, numOff = 0;
-  player_t * curr = NULL;
 
   // INITIALIZE NUM PLAYER
   getNumPlayers(&numDef, &numOff);
@@ -122,12 +121,9 @@ void set_game(game_t * game, int sec)
 
   // INITIALIZE SEC
   game->seconds = sec;
-
   // INITIALIZE GOALS
   for(int i = 0; i < 2; i++)
-  {
     game->res[i] = 0;
-  }
 
   // INITIALIZE GAME PLAYER POSITIONS
   initPlayers(game, numDef, numOff);
@@ -184,8 +180,8 @@ void movePlayer(player_t * player)
 // PLAYER MOVEMENT THREAD FUNCTION
 void * playerMovement(void * arg)
 {
-  char cli_pipe_name[20];
-  int cli_fd;
+    char cli_pipe_name[20];
+    int cli_fd;
   data_cli_t * data_cli = (data_cli_t *) arg;
   player_t * player = (player_t *) data_cli->player;
   user_t * user_list = (user_t *) data_cli->user_list;
@@ -195,6 +191,9 @@ void * playerMovement(void * arg)
   {
     // NEW POSITION
     movePlayer(player);
+    puts("Asd");
+    if(player->id == 4)
+      printf("X: %d, Y: %d\n", player->posX, player->posY);
 
     // COPY TO TMP PLAYER STRUCT
     tmp_player.posX = player->posX;
@@ -203,16 +202,11 @@ void * playerMovement(void * arg)
     tmp_player.id = player->id;
 
     // FUCK YOU DINESH
-    /*
     while (user_list) {
         sprintf(cli_pipe_name, CLI_FIFO, user_list->pid);
         cli_fd = open(cli_pipe_name, O_WRONLY|O_CREAT, 0600);
         write(cli_fd, &tmp_player, sizeof(tmp_player));
-        puts("FUCK YOU DINESH AND YOUR SHITTY CODEBASE");
-
-        user_list = user_list->next_usr;
     }
-    */
 
     switch(player->role)
     {
@@ -230,8 +224,10 @@ void * playerMovement(void * arg)
         break;
     }
   }
+
   pthread_exit(0);
 }
+
 
 // THREAD FUNCTION FOR GAME CONTROL
 void * runGame(void * arg)
@@ -245,6 +241,7 @@ void * runGame(void * arg)
   {
     sleep(1);
     puts("game is running");
+    //showMap(game->p_list);
     i++;
   }
 
@@ -261,8 +258,6 @@ void * runGame(void * arg)
   {
     pthread_join(curr->tid, NULL);
     tmp = curr->next;
-    curr->head = NULL;
-    curr->next = NULL;
     free(curr);
     curr = tmp;
   }

@@ -150,7 +150,6 @@ int main(int argc, char const *argv[]) {
     } while( ch != 'q');
 
     EXIT = 1;
-
     for (size_t i = 0; i < game.numPlayers; i++)
         pthread_join(p_pos[i], NULL);
   }
@@ -189,10 +188,8 @@ void move_pl(WINDOW* field, int y, int x){
 int rand_p(int min ,int max){
     return min + rand() % (max - min + 1);
 }
-
-void * thread_mgmt( void *p){
+void* thread_mgmt( void *p){
     struct thread_data *data = (struct thread_data *) p;
-
 
     do {
         pthread_mutex_lock(&lock);

@@ -1,0 +1,9 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	0	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+srv_shutdown	/home/h3x/Projects/Ccode/Trabalho_SO/Final_Work/src/server.c	/^bool srv_shutdown = false;$/;"	variable	line:3
+main	/home/h3x/Projects/Ccode/Trabalho_SO/Final_Work/src/server.c	/^int main(int argc, char const *argv[])$/;"	function	line:5	signature:(int argc, char const *argv[])
+signal_handler_srv	/home/h3x/Projects/Ccode/Trabalho_SO/Final_Work/src/server.c	/^void signal_handler_srv(int sig){$/;"	function	line:211	signature:(int sig)
