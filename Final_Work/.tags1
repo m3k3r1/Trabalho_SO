@@ -6,11 +6,10 @@
 !_TAG_PROGRAM_VERSION	5.9~svn20110310	//
 getNumPlayers	/home/h3x/Projects/Ccode/Trabalho_SO/Final_Work/src/game_mgmt.c	/^void getNumPlayers(int * numDef, int * numOff)$/;"	function	line:6	signature:(int * numDef, int * numOff)
 initPlayers	/home/h3x/Projects/Ccode/Trabalho_SO/Final_Work/src/game_mgmt.c	/^void initPlayers(game_t * game, int numDef, int numOff)$/;"	function	line:26	signature:(game_t * game, int numDef, int numOff)
-set_game	/home/h3x/Projects/Ccode/Trabalho_SO/Final_Work/src/game_mgmt.c	/^void set_game(game_t * game, int sec)$/;"	function	line:113	signature:(game_t * game, int sec)
-init_random_gen	/home/h3x/Projects/Ccode/Trabalho_SO/Final_Work/src/game_mgmt.c	/^void init_random_gen()$/;"	function	line:133
-randNum	/home/h3x/Projects/Ccode/Trabalho_SO/Final_Work/src/game_mgmt.c	/^int randNum(int min, int max)$/;"	function	line:139	signature:(int min, int max)
-moveCheck	/home/h3x/Projects/Ccode/Trabalho_SO/Final_Work/src/game_mgmt.c	/^int moveCheck(int x, int y, player_t * head)$/;"	function	line:145	signature:(int x, int y, player_t * head)
-movePlayer	/home/h3x/Projects/Ccode/Trabalho_SO/Final_Work/src/game_mgmt.c	/^void movePlayer(player_t * player)$/;"	function	line:161	signature:(player_t * player)
-playerMovement	/home/h3x/Projects/Ccode/Trabalho_SO/Final_Work/src/game_mgmt.c	/^void * playerMovement(void * arg)$/;"	function	line:180	signature:(void * arg)
-showMap	/home/h3x/Projects/Ccode/Trabalho_SO/Final_Work/src/game_mgmt.c	/^void showMap(player_t * p_list)$/;"	function	line:220	signature:(player_t * p_list)
-runGame	/home/h3x/Projects/Ccode/Trabalho_SO/Final_Work/src/game_mgmt.c	/^void * runGame(void * arg)$/;"	function	line:248	signature:(void * arg)
+set_game	/home/h3x/Projects/Ccode/Trabalho_SO/Final_Work/src/game_mgmt.c	/^void set_game(game_t * game, int sec)$/;"	function	line:114	signature:(game_t * game, int sec)
+init_random_gen	/home/h3x/Projects/Ccode/Trabalho_SO/Final_Work/src/game_mgmt.c	/^void init_random_gen()$/;"	function	line:138
+randNum	/home/h3x/Projects/Ccode/Trabalho_SO/Final_Work/src/game_mgmt.c	/^int randNum(int min, int max)$/;"	function	line:144	signature:(int min, int max)
+moveCheck	/home/h3x/Projects/Ccode/Trabalho_SO/Final_Work/src/game_mgmt.c	/^int moveCheck(int x, int y, player_t * head)$/;"	function	line:150	signature:(int x, int y, player_t * head)
+movePlayer	/home/h3x/Projects/Ccode/Trabalho_SO/Final_Work/src/game_mgmt.c	/^void movePlayer(player_t * player)$/;"	function	line:166	signature:(player_t * player)
+playerMovement	/home/h3x/Projects/Ccode/Trabalho_SO/Final_Work/src/game_mgmt.c	/^void * playerMovement(void * arg)$/;"	function	line:185	signature:(void * arg)
+runGame	/home/h3x/Projects/Ccode/Trabalho_SO/Final_Work/src/game_mgmt.c	/^void * runGame(void * arg)$/;"	function	line:237	signature:(void * arg)

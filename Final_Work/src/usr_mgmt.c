@@ -172,20 +172,28 @@ void write_game_cli(user_t * list, game_t * game)
   int cli_fd;
 
   // ASSIGN DATA TO CLIENT GAME STRUCT
-  game_tmp.seconds = game->seconds;
-  game_tmp.numPlayers = game->numPlayers;
-  for(int i = 0; i < 2; i++)
-    game_tmp.res[i] = game->res[i];
-
-  // SEND CLIENT PLAYER STRUCT
-  while(list)
+  if(game)
   {
+    game_tmp.seconds = game->seconds;
+    game_tmp.numPlayers = game->numPlayers;
+    for(int i = 0; i < 2; i++)
+      game_tmp.res[i] = game->res[i];
+  }
+
+  puts("2");
+  // SEND CLIENT PLAYER STRUCT
+  while(list != NULL)
+  {
+      puts("3");
     sprintf(cli_pipe_name, CLI_FIFO, list->pid);
     cli_fd = open(cli_pipe_name, O_WRONLY|O_CREAT, 0600);
+
+      puts("4");
 
     // SEND CLIENT GAME STRUCT
     write(cli_fd, &game_tmp, sizeof(game_tmp));
 
+  puts("5");
     // ASSIGN POSITION
     while(curr)
     {
@@ -193,6 +201,23 @@ void write_game_cli(user_t * list, game_t * game)
       p_tmp.posX = curr->posX;
       p_tmp.posY = curr->posY;
       p_tmp.id = curr->id;
+
+      puts("PRINTING OUT TMP STRUCT pLAYER");
+
+      printf("role: %d, id: %d\n"
+             "posX: %d, posY: %d\n"
+             "run: %d\n",
+             curr->role,
+             curr->id, curr->posX,
+             curr->posY, curr->run);
+
+             printf("role: %d, id: %d\n"
+                    "posX: %d, posY: %d\n",
+                    p_tmp.role,
+                    p_tmp.id, p_tmp.posX,
+                    p_tmp.posY);
+
+      scanf("%*c");
 
       write(cli_fd, &p_tmp, sizeof(p_tmp));
       curr = curr->next;

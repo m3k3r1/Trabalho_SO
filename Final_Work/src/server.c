@@ -6,7 +6,9 @@ int main(int argc, char const *argv[])
 {
   int srv_fd, cli_fd;                 // FIFO CONNECION
   char  cli_pipe_name[20],            // CLIENT NAME WITH PID
-        cmd[20], arg1[20], arg2[20],  // COMMAND LINE STRS
+        cmd[20] = "",
+        arg1[20] = "",
+        arg2[20] = "",                // COMMAND LINE STRS
         file_name[20];                // LOGIN CREDS FILE
   bool  custom_login_file = false;    // BOOL IF SERVER IS STARTED WITH LOG FILE
   login_t cli_log;                    // USER CREDS STRUCT
@@ -85,27 +87,14 @@ int main(int argc, char const *argv[])
         if(!strcmp(cmd, "start") && strlen(arg1) > 0)
         {
           puts("game start"); // DEBUG
-          // ASSIGN DATA STRUCT FOR CLI
-          data_cli.user_list = user_list;
 
           // SET GAME DATA
-          set_game(&game, atoi(arg1));
 
           // SEND GAME DATA
-          write_game_cli(user_list, &game);
 
           // CREATE GAME THREAD
-          pthread_create(&(game.tid), NULL, runGame, (void *) &game);
 
           // CREATE GAME PLAYER MOVEMENT THREAD FOR EACH ONE
-          data_cli.player = game.p_list;
-          while(data_cli.player)
-          {
-            // GAME PLAYER MOVEMENT THREAD
-            pthread_create(&(data_cli.player->tid), NULL, playerMovement, &data_cli);
-
-            data_cli.player = data_cli.player->next;
-          }
         }
       }
 
@@ -156,7 +145,7 @@ int main(int argc, char const *argv[])
 
   // SEND 0 BYTES TO CLIENT SO HE CAN GET THE FUCK OUT OF THE READ
   if(!strcmp(cmd, "shutdown"))
-    write_game_cli(user_list, NULL);
+    //write_game_cli(user_list, NULL);
 
   // WARN USERS SERVER GOING TO SHUTDOWN
   exit_warning(user_list);

@@ -118,7 +118,7 @@ pthread_mutex_init(&lock, NULL);
 
     for (size_t i = 0; i < 5; i++) {
         srand(time(NULL));
-        pthread_create(&p_pos[i], NULL, thread_mgmt, (void *)field);
+        //pthread_create(&p_pos[i], NULL, thread_mgmt, (void *)field);
     }
 
     do {
@@ -139,7 +139,7 @@ pthread_mutex_init(&lock, NULL);
 
     EXIT = 1;
     for (size_t i = 0; i < 5; i++) {
-        pthread_join(p_pos[i], NULL);
+    //    pthread_join(p_pos[i], NULL);
     }
 
 
@@ -179,8 +179,9 @@ void move_pl(WINDOW* field, int y, int x){
 int rand_p(int min ,int max){
     return min + rand() % (max - min + 1);
 }
+/*
 void* thread_mgmt( void *p){
-    struct pos players;
+  //  struct pos players;
     WINDOW *field = (WINDOW *) p;
 
     do {
@@ -197,7 +198,7 @@ void* thread_mgmt( void *p){
 
     pthread_exit(0);
 }
-
+*/
 void clean_pos( WINDOW ** f){
     for (size_t y = 1; y < 20; y++) {
         for (size_t x = 1; x < 50; x++) {
