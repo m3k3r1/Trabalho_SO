@@ -3,6 +3,14 @@
 #define WIDTH 51
 #define HEIGHT 21
 
+// USER STRUCT
+typedef struct user_t user_t;
+struct user_t {
+  char usr_name[20];
+  pid_t pid;
+  user_t * next_usr;
+};
+
 // GAME PLAYER STRUCT
 typedef struct player_t player_t;
 struct player_t
@@ -17,21 +25,36 @@ struct player_t
 // GAME STRUCT
 typedef struct
 {
-  int seconds;        // GAME SECONDS
+  int seconds;        // GAME SECOND;
   int res[2];         // GAME RESULT
   int numPlayers;     // GAME PLAYER NUM
   player_t * p_list;  // GAME PLAYER LIST
   pthread_t tid;      // TID FOR GAME FUNCTION
 } game_t;
 
-// TODO PLAYER STRUCT NEEDED FOR CLIENT?! SO CLIENT DOESN'T HAVE ACCESS TO ALL INFO
+// POSITION DATA STRUCT FOR CLIENT
+typedef struct
+{
+  player_t * player;
+  user_t * user_list;
+} data_cli_t;
 
+// CLIENT'S GAME STRUCT
+typedef struct
+{
+  int seconds;
+  int numPlayers;
+  int res[2];
+} cli_game_t;
+
+// CLIENTS'S PLAYER STRUCT
+typedef struct
+{
+  int posX, posY, role, id;
+} cli_player_t;
 
 //SETUP GAME FUNCTIONS
-//void getNumPlayers(int * numDef, int * numOff); // GET GAME PLAYER NUM
-//void initPlayers(game_t * game, int numDef, int numOff); // INIT PLAYER DATA
 void set_game(game_t * game, int sec); // SETUP REQUIRED DATA FOR GAME
-
 
 // HANDLING GAME FUNCTIONS
 void * playerMovement(void * arg);

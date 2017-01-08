@@ -5,18 +5,13 @@
 
 #define LOGIN_FILE "res/cli_login.txt"
 
+// CLIENT CREDS STRUCT
 typedef struct
 {
   char usr[20], pass[20];
   bool auth;
 } login_t;
 
-typedef struct user_t user_t;
-struct user_t {
-  char usr_name[20];
-  pid_t pid;
-  user_t * next_usr;
-};
 
 // SERVER FUNCTIONS
 int list_player(user_t * head);
