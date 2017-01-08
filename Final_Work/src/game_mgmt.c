@@ -179,6 +179,8 @@ void movePlayer(player_t * player)
 // PLAYER MOVEMENT THREAD FUNCTION
 void * playerMovement(void * arg)
 {
+    char cli_pipe_name[20];
+    int cli_fd;
   data_cli_t * data_cli = (data_cli_t *) arg;
   player_t * player = (player_t *) data_cli->player;
   user_t * user_list = (user_t *) data_cli->user_list;
@@ -195,7 +197,12 @@ void * playerMovement(void * arg)
     tmp_player.role = player->role;
     tmp_player.id = player->id;
 
-    // WRITE FUNCTION TO SEND TMP PLAYER TO THE CLI FIFO TODO DINESH
+    // FUCK YOU DINESH
+    while (user_list) {
+        sprintf(cli_pipe_name, CLI_FIFO, user_list->pid);
+        cli_fd = open(cli_pipe_name, O_WRONLY|O_CREAT, 0600);
+        write(cli_fd, &tmp_player, sizeof(tmp_player));
+    }
 
     switch(player->role)
     {

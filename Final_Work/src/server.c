@@ -15,7 +15,7 @@ int main(int argc, char const *argv[])
   game_t game;                        // GAME STRUCT
 
   // TMP VARS
-  data_cli_t * data_cli = NULL;       // DATA STRUCT FOR CLIENT
+  data_cli_t  data_cli ;      // DATA STRUCT FOR CLIENT
 
   //struct sigaction act;
 
@@ -86,7 +86,7 @@ int main(int argc, char const *argv[])
         {
           puts("game start"); // DEBUG
           // ASSIGN DATA STRUCT FOR CLI
-          data_cli->user_list = user_list;
+          data_cli.user_list = user_list;
 
           // SET GAME DATA
           set_game(&game, atoi(arg1));
@@ -98,13 +98,13 @@ int main(int argc, char const *argv[])
           pthread_create(&(game.tid), NULL, runGame, (void *) &game);
 
           // CREATE GAME PLAYER MOVEMENT THREAD FOR EACH ONE
-          data_cli->player = game.p_list;
-          while(data_cli->player)
+          data_cli.player = game.p_list;
+          while(data_cli.player)
           {
             // GAME PLAYER MOVEMENT THREAD
-            pthread_create(&(data_cli->player->tid), NULL, playerMovement, &data_cli);
+            pthread_create(&(data_cli.player->tid), NULL, playerMovement, &data_cli);
 
-            data_cli->player = data_cli->player->next;
+            data_cli.player = data_cli.player->next;
           }
         }
       }

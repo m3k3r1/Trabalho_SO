@@ -177,8 +177,6 @@ void write_game_cli(user_t * list, game_t * game)
   for(int i = 0; i < 2; i++)
     game_tmp.res[i] = game->res[i];
 
-
-
   // SEND CLIENT PLAYER STRUCT
   while(list)
   {
