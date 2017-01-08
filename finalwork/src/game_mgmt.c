@@ -196,7 +196,6 @@ void * playerMovement(void * arg)
     switch(player->role)
     {
       case 0:
-
         sleep(0.3);
         break;
 
