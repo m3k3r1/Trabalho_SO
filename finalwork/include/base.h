@@ -26,6 +26,4 @@ typedef struct
 void cmd_control(char *cmd, char* arg1, char* arg2);
 
 void signal_handler_srv(int sig);
-void signal_handler_cli(int sig);
-
 #endif

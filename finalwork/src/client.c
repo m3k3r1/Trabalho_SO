@@ -19,6 +19,7 @@ void move_pl(WINDOW* field, int y, int x,int color, int role);
 int rand_p(int min ,int max);
 void thread_mgmt( WINDOW * field, int x, int y,int color,int role);
 void clean_pos( WINDOW ** f);
+void signal_handler_cli(int sig);
 
 int main(int argc, char const *argv[]) {
   int srv_fd, cli_fd;         // FIFO CONNECTION
@@ -39,8 +40,6 @@ int main(int argc, char const *argv[]) {
 
   // SIGNAL TO KILL SERVER
   signal(SIGUSR1, signal_handler_cli);
-  // SIGNAL TO WHAT MICHAEL???
-  signal(SIGALRM, signal_handler_cli);
 
   if(access(SRV_FIFO, F_OK))
   {
@@ -89,7 +88,7 @@ int main(int argc, char const *argv[]) {
     // READ CLIENT GAME STRUCT
     do {
       n_bytes = read(cli_fd, &game, sizeof(game));
-    } while(n_bytes == 0 && !cli_shutdown);
+  } while(n_bytes == 0 && !cli_shutdown);
 
     // CLI PLAYER STRUCT MALLOC
     player_list = malloc(sizeof(cli_player_t) * game.numPlayers*2);
@@ -153,7 +152,7 @@ int main(int argc, char const *argv[]) {
               }
             }
           }
-    } while( ch != 'q');
+    } while( ch != 'q' && !cli_shutdown);
   }
 
   // CLOSE FIFO CONNECTION
@@ -164,11 +163,6 @@ int main(int argc, char const *argv[]) {
   unlink(cli_pipe_name);
 
   return 0;
-}
-
-void signal_handler_cli(int sig){
-  if(sig == SIGUSR1)
-    cli_shutdown = true;
 }
 
 WINDOW* crt_win(int height, int width, int start_x, int start_y){
@@ -187,11 +181,6 @@ void move_pl(WINDOW* field, int y, int x,int color, int role){
     mvwprintw(field, y, x, "%d", role);
     wattroff(field,COLOR_PAIR(color));
 }
-
-int rand_p(int min ,int max){
-    return min + rand() % (max - min + 1);
-}
-
 void thread_mgmt( WINDOW * field, int x, int y, int color,int role){
 
 
@@ -207,7 +196,6 @@ void thread_mgmt( WINDOW * field, int x, int y, int color,int role){
 
     //pthread_exit(0);
 }
-
 void clean_pos( WINDOW ** f){
     for (size_t y = 1; y < 20; y++) {
         for (size_t x = 1; x < 50; x++) {
@@ -219,5 +207,11 @@ void clean_pos( WINDOW ** f){
         wattroff(*f,COLOR_PAIR(2));
 
         }
+    }
+}
+void signal_handler_cli(int sig){
+    if (sig == SIGUSR1) {
+        cli_shutdown = true;
+        printf("received signal %d\n", sig );
     }
 }
