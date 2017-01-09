@@ -130,8 +130,6 @@ void logout_user(user_t ** head, siginfo_t * cli, void * context)
   user_t * curr, * aux, *tmp = NULL;
   curr = aux = * head;
 
-
-
   if((*head)->next_usr == NULL)
   {
     free(*head);

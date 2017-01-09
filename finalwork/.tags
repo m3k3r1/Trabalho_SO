@@ -18,24 +18,25 @@ ODIR	Makefile	/^ODIR=obj$/;"	m
 SRC	Makefile	/^SRC=src$/;"	m
 SRV_FIFO	include/base.h	18;"	d
 USR_MGMT_H	include/usr_mgmt.h	2;"	d
+USR_UI_H	include/usr_ui.h	2;"	d
 WIDTH	include/game_mgmt.h	3;"	d
-_DEPS	Makefile	/^_DEPS = base.h usr_mgmt.h game_mgmt.h$/;"	m
-_OBJ	Makefile	/^_OBJ = server.o client.o usr_mgmt.o base.o game_mgmt.o$/;"	m
+_DEPS	Makefile	/^_DEPS = base.h usr_mgmt.h game_mgmt.h usr_ui.h$/;"	m
+_OBJ	Makefile	/^_OBJ = server.o client.o usr_mgmt.o base.o game_mgmt.o usr_ui.o$/;"	m
 add_user	src/usr_mgmt.c	/^user_t * add_user(char usr[20], int pid){$/;"	f
 auth	include/usr_mgmt.h	/^  bool auth;$/;"	m	struct:__anon5
 check_user	src/usr_mgmt.c	/^bool check_user(user_t * head ,char usr[20]){$/;"	f
-clean_pos	src/client.c	/^void clean_pos( WINDOW ** f){$/;"	f
+clean_pos	src/usr_ui.c	/^void clean_pos( WINDOW ** f){$/;"	f
 cli_game_t	include/game_mgmt.h	/^} cli_game_t;$/;"	t	typeref:struct:__anon2
 cli_info_t	include/base.h	/^} cli_info_t;$/;"	t	typeref:struct:__anon4
 cli_player_t	include/game_mgmt.h	/^} cli_player_t;$/;"	t	typeref:struct:__anon3
 cli_shutdown	src/client.c	/^bool cli_shutdown = false;$/;"	v
 cmd_control	src/base.c	/^void cmd_control(char *cmd, char* arg1, char* arg2){$/;"	f
-crt_win	src/client.c	/^WINDOW* crt_win(int height, int width, int start_x, int start_y){$/;"	f
+crt_win	src/usr_ui.c	/^WINDOW* crt_win(int height, int width, int start_x, int start_y){$/;"	f
 data_player	include/game_mgmt.h	/^  data_player_t * data_player;$/;"	m	struct:__anon1
 data_player_t	include/game_mgmt.h	/^struct data_player_t$/;"	s
 data_player_t	include/game_mgmt.h	/^typedef struct data_player_t data_player_t;$/;"	t	typeref:struct:data_player_t
 exit_warning	src/usr_mgmt.c	/^void exit_warning(user_t * list){$/;"	f
-field	src/client.c	/^    WINDOW *field;$/;"	m	struct:thread_data	file:
+field	include/usr_ui.h	/^    WINDOW *field;$/;"	m	struct:thread_data
 free_mem	src/usr_mgmt.c	/^void free_mem(user_t * head) {$/;"	f
 game_t	include/game_mgmt.h	/^} game_t;$/;"	t	typeref:struct:__anon1
 getNumPlayers	src/game_mgmt.c	/^void getNumPlayers(int * numDef, int * numOff)$/;"	f
@@ -45,20 +46,19 @@ id	include/game_mgmt.h	/^  int role, id;             \/\/ PLAYER ROLE AND ID$/;"
 initPlayers	src/game_mgmt.c	/^void initPlayers(game_t * game, int numDef, int numOff)$/;"	f
 init_random_gen	src/game_mgmt.c	/^void init_random_gen()$/;"	f
 list_player	src/usr_mgmt.c	/^int list_player(user_t * head){$/;"	f
-lock	src/client.c	/^pthread_mutex_t lock;$/;"	v
 login_t	include/usr_mgmt.h	/^} login_t;$/;"	t	typeref:struct:__anon5
 logout_user	src/usr_mgmt.c	/^void logout_user(user_t ** head, siginfo_t * cli, void * context)$/;"	f
 main	src/client.c	/^int main(int argc, char const *argv[]) {$/;"	f
 main	src/server.c	/^int main(int argc, char const *argv[])$/;"	f
 moveCheck	src/game_mgmt.c	/^int moveCheck(int x, int y, player_t * head)$/;"	f
 movePlayer	src/game_mgmt.c	/^void movePlayer(player_t * player)$/;"	f
-move_pl	src/client.c	/^void move_pl(WINDOW* field, int y, int x){$/;"	f
+move_pl	src/usr_ui.c	/^void move_pl(WINDOW* field, int y, int x,int color, int role){$/;"	f
 next	include/game_mgmt.h	/^  data_player_t * next;$/;"	m	struct:data_player_t
 next	include/game_mgmt.h	/^  player_t * next, * head;  \/\/ NEXT PLAYER PTR$/;"	m	struct:player_t
 next_usr	include/game_mgmt.h	/^  user_t * next_usr;$/;"	m	struct:user_t
 numPlayers	include/game_mgmt.h	/^  int numPlayers;     \/\/ GAME PLAYER NUM$/;"	m	struct:__anon1
 numPlayers	include/game_mgmt.h	/^  int numPlayers;$/;"	m	struct:__anon2
-p	src/client.c	/^    struct pos p;$/;"	m	struct:thread_data	typeref:struct:thread_data::pos	file:
+p	include/usr_ui.h	/^    struct pos p;$/;"	m	struct:thread_data	typeref:struct:thread_data::pos
 p_list	include/game_mgmt.h	/^  player_t * p_list;  \/\/ GAME PLAYER LIST$/;"	m	struct:__anon1
 pass	include/usr_mgmt.h	/^  char usr[20], pass[20];$/;"	m	struct:__anon5
 pid	include/base.h	/^  pid_t pid;$/;"	m	struct:__anon4
@@ -67,13 +67,13 @@ player	include/game_mgmt.h	/^  player_t * player;$/;"	m	struct:data_player_t
 playerMovement	src/game_mgmt.c	/^void * playerMovement(void * arg)$/;"	f
 player_t	include/game_mgmt.h	/^struct player_t$/;"	s
 player_t	include/game_mgmt.h	/^typedef struct player_t player_t;$/;"	t	typeref:struct:player_t
-pos	src/client.c	/^struct pos{$/;"	s	file:
+pos	include/usr_ui.h	/^struct pos{$/;"	s
 posX	include/game_mgmt.h	/^  int posX, posY, role, id;$/;"	m	struct:__anon3
 posX	include/game_mgmt.h	/^  int posX, posY;           \/\/ PLAYER POS$/;"	m	struct:player_t
 posY	include/game_mgmt.h	/^  int posX, posY, role, id;$/;"	m	struct:__anon3
 posY	include/game_mgmt.h	/^  int posX, posY;           \/\/ PLAYER POS$/;"	m	struct:player_t
 randNum	src/game_mgmt.c	/^int randNum(int min, int max)$/;"	f
-rand_p	src/client.c	/^int rand_p(int min ,int max){$/;"	f
+render_players	src/usr_ui.c	/^void render_players( WINDOW * field, int x, int y, int color,int role){$/;"	f
 res	include/game_mgmt.h	/^  int res[2];         \/\/ GAME RESULT$/;"	m	struct:__anon1
 res	include/game_mgmt.h	/^  int res[2];$/;"	m	struct:__anon2
 retval	include/game_mgmt.h	/^  void * retval;$/;"	m	struct:__anon1
@@ -91,8 +91,7 @@ sign_up	src/usr_mgmt.c	/^void sign_up(char* new_usr, char* new_pwd, char* file_n
 signal_handler_cli	src/client.c	/^void signal_handler_cli(int sig){$/;"	f
 signal_handler_srv	src/server.c	/^void signal_handler_srv(int sig){$/;"	f
 srv_shutdown	src/server.c	/^bool srv_shutdown = false;$/;"	v
-thread_data	src/client.c	/^struct thread_data{$/;"	s	file:
-thread_mgmt	src/client.c	/^void thread_mgmt( WINDOW * field, int x, int y){$/;"	f
+thread_data	include/usr_ui.h	/^struct thread_data{$/;"	s
 tid	include/game_mgmt.h	/^  pthread_t tid;            \/\/ PLAYER MOVEMENT THREAD$/;"	m	struct:player_t
 tid	include/game_mgmt.h	/^  pthread_t tid;      \/\/ TID FOR GAME FUNCTION$/;"	m	struct:__anon1
 user_list	include/game_mgmt.h	/^  user_t * user_list;$/;"	m	struct:data_player_t
@@ -102,5 +101,5 @@ usr	include/usr_mgmt.h	/^  char usr[20], pass[20];$/;"	m	struct:__anon5
 usr_auth	src/usr_mgmt.c	/^bool usr_auth(char usr[20], char pass[20], char * file_name, bool custom_file){$/;"	f
 usr_name	include/game_mgmt.h	/^  char usr_name[20];$/;"	m	struct:user_t
 write_game_cli	src/usr_mgmt.c	/^void write_game_cli(user_t * list, game_t * game)$/;"	f
-x	src/client.c	/^    int x, y;$/;"	m	struct:pos	file:
-y	src/client.c	/^    int x, y;$/;"	m	struct:pos	file:
+x	include/usr_ui.h	/^    int x, y;$/;"	m	struct:pos
+y	include/usr_ui.h	/^    int x, y;$/;"	m	struct:pos

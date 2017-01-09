@@ -1,0 +1,2 @@
+gcc -c -o obj/client.o src/client.c -Iinclude -Wall -g -lncurses -lpthread
+Makefile:16: recipe for target 'obj/client.o' failed

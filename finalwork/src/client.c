@@ -1,24 +1,10 @@
 #include "base.h"
 #include "usr_mgmt.h"
+#include "usr_ui.h"
 
 bool cli_shutdown = false;
 int EXIT = 0;
-pthread_mutex_t lock;
 
-struct pos{
-    int x, y;
-};
-
-struct thread_data{
-    WINDOW *field;
-    struct pos p;
-};
-
-WINDOW* crt_win(int height, int width, int start_x, int start_y);
-void move_pl(WINDOW* field, int y, int x,int color, int role);
-int rand_p(int min ,int max);
-void thread_mgmt( WINDOW * field, int x, int y,int color,int role);
-void clean_pos( WINDOW ** f);
 void signal_handler_cli(int sig);
 
 int main(int argc, char const *argv[]) {
@@ -31,7 +17,6 @@ int main(int argc, char const *argv[]) {
   login_t cli_log;            // USER CREDENTIALS
   pid_t cli_pid;              // CLIENT PID
   WINDOW * field;
-  pthread_mutex_init(&lock, NULL);
   struct thread_data *thd_cli = NULL;
   cli_game_t game;
   cli_player_t * player_list = NULL;
@@ -147,13 +132,25 @@ int main(int argc, char const *argv[]) {
                 else
                   color = 2;
 
-                thread_mgmt(field, player_list[i].posX, player_list[i].posY, color, player_list[i].role);
+                render_players(field, player_list[i].posX, player_list[i].posY, color, player_list[i].role);
 
               }
             }
           }
     } while( ch != 'q' && !cli_shutdown);
   }
+
+
+  delwin(field);
+  endwin();
+
+
+  //free
+
+    free(player_list);
+    free(thd_cli);
+
+
 
   // CLOSE FIFO CONNECTION
   close(cli_fd);
@@ -165,53 +162,10 @@ int main(int argc, char const *argv[]) {
   return 0;
 }
 
-WINDOW* crt_win(int height, int width, int start_x, int start_y){
-    WINDOW * game_field;
-
-    game_field = newwin(height, width, start_y, start_x);
-    box(game_field, '|' , '-');
-
-
-    wrefresh(game_field);
-
-    return game_field;
-}
-void move_pl(WINDOW* field, int y, int x,int color, int role){
-    wattron(field,COLOR_PAIR(color));
-    mvwprintw(field, y, x, "%d", role);
-    wattroff(field,COLOR_PAIR(color));
-}
-void thread_mgmt( WINDOW * field, int x, int y, int color,int role){
-
-
-  //  do {
-    //    pthread_mutex_lock(&lock);
-        move_pl(field, y, x, color,role);
-        wrefresh(field);
-      //  pthread_mutex_unlock(&lock);
-
-        //SPEED
-        //sleep(1);
-    //} while(!EXIT);
-
-    //pthread_exit(0);
-}
-void clean_pos( WINDOW ** f){
-    for (size_t y = 1; y < 20; y++) {
-        for (size_t x = 1; x < 50; x++) {
-
-        wattron(*f,COLOR_PAIR(2));
-        pthread_mutex_lock(&lock);
-        mvwprintw(*f, y, x, " ");
-        pthread_mutex_unlock(&lock);
-        wattroff(*f,COLOR_PAIR(2));
-
-        }
-    }
-}
 void signal_handler_cli(int sig){
     if (sig == SIGUSR1) {
         cli_shutdown = true;
-        printf("received signal %d\n", sig );
+        puts("Shutdown Signal from server");
+        exit(0);
     }
 }
