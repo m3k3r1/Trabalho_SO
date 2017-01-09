@@ -15,13 +15,14 @@ struct thread_data{
 };
 
 WINDOW* crt_win(int height, int width, int start_x, int start_y);
-void move_pl(WINDOW* field, int y, int x);
+void move_pl(WINDOW* field, int y, int x,int color, int role);
 int rand_p(int min ,int max);
-void thread_mgmt( WINDOW * field, int x, int y);
+void thread_mgmt( WINDOW * field, int x, int y,int color,int role);
 void clean_pos( WINDOW ** f);
 
 int main(int argc, char const *argv[]) {
   int srv_fd, cli_fd;         // FIFO CONNECTION
+  int color = 0;
   int tryHard = 0;            // TRY HARD VAR FOR CLIENT LOCKOUT
   int n_bytes;
   int ch, start_y = 0, start_x = 0, height = 21, width = 51;
@@ -29,7 +30,6 @@ int main(int argc, char const *argv[]) {
   login_t cli_log;            // USER CREDENTIALS
   pid_t cli_pid;              // CLIENT PID
   WINDOW * field;
-  pthread_t p_pos[20];
   pthread_mutex_init(&lock, NULL);
   struct thread_data *thd_cli = NULL;
   cli_game_t game;
@@ -108,7 +108,7 @@ int main(int argc, char const *argv[]) {
     curs_set(0);
     start_color();
     init_pair(1, COLOR_RED, COLOR_BLACK);
-    init_pair(2, COLOR_GREEN, COLOR_BLACK);
+    init_pair(2, COLOR_YELLOW, COLOR_BLACK);
 
     start_y = (LINES - height) / 2;
     start_x = (COLS - width) / 2;
@@ -120,24 +120,6 @@ int main(int argc, char const *argv[]) {
 
     field = crt_win( height,  width,  start_x,  start_y);
 
-
-    //for (size_t i = 0; i < game.numPlayers * 2; i++) {
-    //    thd_cli[i].field = field;
-      //  pthread_create(&p_pos[i], NULL, thread_mgmt, &thd_cli[i]);
-    //}
-
-    // READS FROM SRV ALL GAME PLAYER DATA
-    for(int i = 0; i < game.numPlayers * 2; i++)
-    {
-      read(cli_fd, &player_list[i], sizeof(cli_player_t));
-      //printf("INIT POSITIONS x:%d | y:%d\n", player_list[i].posX, player_list[i].posY );
-      thd_cli[i].p.x = player_list[i].posX;
-      thd_cli[i].p.y = player_list[i].posY;
-      thread_mgmt(field, player_list[i].posX, player_list[i].posY );
-
-    // LIST GAME
-    // CONNECT TO GAME: TEAM NUM, PLAYER NUM
-    }
 
     do {
         FD_ZERO(&conj);
@@ -160,21 +142,18 @@ int main(int argc, char const *argv[]) {
                 read(cli_fd, &player_list[i], sizeof(cli_player_t));
                 thd_cli[i].p.x = player_list[i].posX;
                 thd_cli[i].p.y = player_list[i].posY;
-                thread_mgmt(field, thd_cli[i].p.x, thd_cli[i].p.y );
+
+                if (i <= game.numPlayers)
+                  color = 1;
+                else
+                  color = 2;
+
+                thread_mgmt(field, player_list[i].posX, player_list[i].posY, color, player_list[i].role);
+
               }
-            //  for (size_t i = 0; i < game.numPlayers*2; i++)
-              //    pthread_join(p_pos[i], NULL);
             }
-
-        }else{
-            clean_pos(&field);
-            wrefresh(field);
-        }
+          }
     } while( ch != 'q');
-
-  //  EXIT = 1;
-    //for (size_t i = 0; i < game.numPlayers*2; i++)
-      //  pthread_join(p_pos[i], NULL);
   }
 
   // CLOSE FIFO CONNECTION
@@ -203,22 +182,22 @@ WINDOW* crt_win(int height, int width, int start_x, int start_y){
 
     return game_field;
 }
-void move_pl(WINDOW* field, int y, int x){
-    wattron(field,COLOR_PAIR(1));
-    mvwprintw(field, y, x, "Y");
-    wattroff(field,COLOR_PAIR(1));
+void move_pl(WINDOW* field, int y, int x,int color, int role){
+    wattron(field,COLOR_PAIR(color));
+    mvwprintw(field, y, x, "%d", role);
+    wattroff(field,COLOR_PAIR(color));
 }
 
 int rand_p(int min ,int max){
     return min + rand() % (max - min + 1);
 }
 
-void thread_mgmt( WINDOW * field, int x, int y){
+void thread_mgmt( WINDOW * field, int x, int y, int color,int role){
 
 
   //  do {
     //    pthread_mutex_lock(&lock);
-        move_pl(field, y, x);
+        move_pl(field, y, x, color,role);
         wrefresh(field);
       //  pthread_mutex_unlock(&lock);
 
