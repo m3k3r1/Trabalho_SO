@@ -194,30 +194,15 @@ void write_game_cli(user_t * list, game_t * game)
       p_tmp.posY = curr->posY;
       p_tmp.id = curr->id;
 
-      write(cli_fd, &p_tmp, sizeof(p_tmp));
+      write(cli_fd, &p_tmp, sizeof(cli_player_t));
       curr = curr->next;
     }
+    curr = game->p_list;
 
     // NEXT USER/CLIENT
     list = list->next_usr;
   }
 }
-// SENDS SHIT TO USR
-void write_to_clients(user_t * list, bool gamestart)
-{
-  char shit_name[20];
-  int cli_fd;
-
-  while(list)
-  {
-    sprintf(shit_name, "client_%d_FIFO", list->pid);
-    cli_fd = open(shit_name, O_WRONLY|O_CREAT, 0600);
-    write(cli_fd, &gamestart, sizeof(gamestart));
-    close(cli_fd);
-    list = list->next_usr;
-  }
-}
-
 
 // CLIENT FUNCTIONS
 // READS CLIENT CREDS

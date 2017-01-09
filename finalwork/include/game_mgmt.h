@@ -37,7 +37,7 @@ typedef struct
 // POSITION DATA STRUCT FOR CLIENT
 typedef struct
 {
-  player_t * player_list;
+  player_t * player;
   user_t * user_list;
 } data_cli_t;
 

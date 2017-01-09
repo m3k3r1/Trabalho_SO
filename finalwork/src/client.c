@@ -97,13 +97,17 @@ int main(int argc, char const *argv[]) {
     // READS FROM SRV ALL GAME PLAYER DATA
     for(int i = 0; i < game.numPlayers * 2; i++)
     {
+      printf("READ %d\n", i);
       read(cli_fd, &player_list[i], sizeof(cli_player_t));
       thd_cli[i].p.x = player_list[i].posX;
       thd_cli[i].p.y = player_list[i].posY;
 
     // LIST GAME
     // CONNECT TO GAME: TEAM NUM, PLAYER NUM
+    scanf("%*c");
+    scanf("%*c");
     }
+
 
     fd_set conj;
     struct timeval tempo;

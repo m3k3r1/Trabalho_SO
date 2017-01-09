@@ -16,10 +16,10 @@ int main(int argc, char const *argv[])
   user_t * user_list = NULL;          // USER LIST
   game_t game;                        // GAME STRUCT
 
+
   // TMP VARS
-  data_cli_t  data_cli ;      // DATA STRUCT FOR CLIENT
+  data_cli_t data_cli ;      // DATA STRUCT FOR CLIENT
   cli_game_t c_game;
-  cli_player_t player;
   player_t * curr_player = NULL;
 
   //struct sigaction act;
@@ -95,6 +95,9 @@ int main(int argc, char const *argv[])
 
           // SET GAME DATA
           set_game(&game, atoi(arg1));
+          data_cli.player = game.p_list;
+          write_game_cli(user_list, &game);
+
 
           // CREATE GAME THREAD
           pthread_create(&(game.tid), NULL, runGame, (void *) &game);
