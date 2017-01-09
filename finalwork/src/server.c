@@ -18,8 +18,7 @@ int main(int argc, char const *argv[])
 
 
   // TMP VARS
-  data_cli_t data_cli ;      // DATA STRUCT FOR CLIENT
-  cli_game_t c_game;
+  data_player_t * player_data = NULL, * curr_player_data = NULL;      // DATA STRUCT FOR CLIENT
   player_t * curr_player = NULL;
 
   //struct sigaction act;
@@ -90,28 +89,58 @@ int main(int argc, char const *argv[])
         if(!strcmp(cmd, "start") && strlen(arg1) > 0)
         {
           puts("game start"); // DEBUG
-          // ASSIGN DATA STRUCT FOR CLI
-          data_cli.user_list = user_list;
 
           // SET GAME DATA
           set_game(&game, atoi(arg1));
-          data_cli.player = game.p_list;
+
+          // SEND CLIENT GAME STRUCT TO CLIENT
           write_game_cli(user_list, &game);
 
+          // SET PLAYER STRUCT DATA
+          curr_player = game.p_list;
+          curr_player_data = malloc(sizeof(data_player_t));
+          curr_player_data->player = curr_player;
+          curr_player_data->user_list = user_list;
+          curr_player_data->next = NULL;
+
+          // PTR FOR PLAYER STRUCT DATA FOR THREADS
+          player_data = curr_player_data;
+
+          // CREATE LINK LIST FOR PLAYER DATA STRUCT FOR THREADS
+          curr_player = curr_player->next;
+          while(curr_player)
+          {
+            // DATA PLAYER STRUCT MALLOC
+            curr_player_data->next = malloc(sizeof(data_player_t));
+            curr_player_data = curr_player_data->next;
+
+            // ASSIGN ALL PTRS NEEDED
+            curr_player_data->player = curr_player;
+            curr_player_data->user_list = user_list;
+            curr_player_data->next = NULL;
+
+            // GET NEXT PLAYER
+            curr_player = curr_player->next;
+
+          }
+
+          // ASSIGN DATA PLAYER STRUCT PTR TO GAME
+          game.data_player = player_data;
 
           // CREATE GAME THREAD
           pthread_create(&(game.tid), NULL, runGame, (void *) &game);
 
           // CREATE GAME PLAYER MOVEMENT THREADS
-          curr_player = game.p_list;
-          while(curr_player)
+          curr_player_data = player_data;
+          while(curr_player_data)
           {
-            pthread_create(&(curr_player->tid), NULL, playerMovement, (void *) curr_player);
-            curr_player = curr_player->next;
-          }
+            pthread_create(&(curr_player_data->player->tid),
+                          NULL,
+                          playerMovement,
+                          (void *) curr_player_data);
 
-          user_t *list = user_list;
-          game_t game_tmp  = game;
+            curr_player_data = curr_player_data->next;
+          }
 /*
           while (list) {
             sprintf(cli_pipe_name , CLI_FIFO, list->pid);

@@ -59,7 +59,7 @@ void initPlayers(game_t * game, int numDef, int numOff)
       }
       else
       {
-        curr->posX = 50;
+        curr->posX = 49;
         curr->posY = 10;
       }
     }
@@ -168,12 +168,12 @@ void movePlayer(player_t * player)
     do {
       tmpX = player->posX;
       tmpX = randNum(tmpX - 1, tmpX + 1);
-    } while(tmpX < 0 || tmpX >= WIDTH);
+    } while(tmpX < 1 || tmpX >= WIDTH - 1);
 
     do {
       tmpY = player->posY;
       tmpY = randNum(tmpY - 1, tmpY + 1);
-    } while(tmpY < 0 || tmpY >= HEIGHT);
+    } while(tmpY < 1 || tmpY >= HEIGHT - 1);
   } while(moveCheck(tmpX, tmpY, player->head));
 
   player->posX = tmpX;
@@ -183,36 +183,54 @@ void movePlayer(player_t * player)
 // PLAYER MOVEMENT THREAD FUNCTION
 void * playerMovement(void * arg)
 {
+  int cli_fd;
+  char cli_pipe_name[20];
   // PTRS
-  player_t * player = (player_t *) arg;
-  //player_t * head = (player_t *) arg->player_list
-  //user_t * curr_user = (user_t *) arg->user_list;
+  data_player_t * data_player = (data_player_t *) arg;
+  player_t * player = (player_t *) data_player->player;
+  user_t * user_list = (user_t *) data_player->user_list, * curr_user = NULL;
+  cli_player_t tmp_player;
 
   while(player->run)
   {
     // NEW POSITION
     movePlayer(player);
-      printf("ID: %d, X: %d, Y: %d\n", player->id, player->posX, player->posY);
+
+    // SEND TO CLIENT PLAYER STRUCt
+    tmp_player.posX = player->posX;
+    tmp_player.posY = player->posY;
+    tmp_player.role = player->role;
+    tmp_player.id = player->id;
+
+    curr_user = user_list;
+    while(curr_user)
+    {
+      sprintf(cli_pipe_name, CLI_FIFO, curr_user->pid);
+      cli_fd = open(cli_pipe_name, O_WRONLY|O_CREAT, 0600);
+
+      write(cli_fd, &tmp_player, sizeof(cli_player_t));
+
+      curr_user = curr_user->next_usr;
+    }
+
+    // PLAYER SPEED
     switch(player->role)
     {
       case 0:
-        //sleep(0.3);
-        sleep(1);
+        sleep(1.3);
+        //sleep(1);
         break;
 
       case 1:
-        //sleep(0.4);
-        sleep(1);
+        sleep(1.4);
+        //sleep(1);
         break;
 
       case 2:
-        //sleep(0.3);
-        sleep(1);
+        sleep(1.3);
+        //sleep(1);
         break;
     }
-
-    // SEND TO CLIENT
-
   }
 
   pthread_exit(0);
@@ -225,6 +243,7 @@ void * runGame(void * arg)
   int i = 0;
   game_t * game = (game_t *) arg;
   player_t * curr = game->p_list, * tmp = NULL;
+  data_player_t * curr_data = game->data_player, * tmp_data = NULL;
 
   // GAME RUNS WHILE COUNTER HASN'T REACH GAME SECONDS
   while(i < game->seconds)
@@ -251,6 +270,15 @@ void * runGame(void * arg)
     curr = tmp;
   }
   game->p_list = NULL;
+
+  // FREE DATA PLAYER STRUCT
+  while(curr_data)
+  {
+    tmp_data = curr_data->next;
+    free(curr_data);
+    curr_data = tmp_data;
+  }
+  game->data_player = NULL;
 
   // SHOW GOALS
   for(int j = 0; j < 2; j++)

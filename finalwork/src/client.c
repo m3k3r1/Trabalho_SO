@@ -17,7 +17,7 @@ struct thread_data{
 WINDOW* crt_win(int height, int width, int start_x, int start_y);
 void move_pl(WINDOW* field, int y, int x);
 int rand_p(int min ,int max);
-void* thread_mgmt( void *p);
+void thread_mgmt( WINDOW * field, int x, int y);
 void clean_pos( WINDOW ** f);
 
 int main(int argc, char const *argv[]) {
@@ -94,68 +94,87 @@ int main(int argc, char const *argv[]) {
     // CLI PLAYER STRUCT MALLOC
     player_list = malloc(sizeof(cli_player_t) * game.numPlayers*2);
     thd_cli = malloc(sizeof(struct thread_data) * game.numPlayers*2);
-    // READS FROM SRV ALL GAME PLAYER DATA
-    for(int i = 0; i < game.numPlayers * 2; i++)
-    {
-      printf("READ %d\n", i);
-      read(cli_fd, &player_list[i], sizeof(cli_player_t));
-      thd_cli[i].p.x = player_list[i].posX;
-      thd_cli[i].p.y = player_list[i].posY;
 
-    // LIST GAME
-    // CONNECT TO GAME: TEAM NUM, PLAYER NUM
-    scanf("%*c");
-    scanf("%*c");
-    }
 
 
     fd_set conj;
     struct timeval tempo;
     int ret;
 
-    initscr();			/* Start curses mode 		*/
-    cbreak();			/* Line buffering disabled, Pass on  everty thing to me 		*/
-    keypad(stdscr, TRUE);		/* I need that nifty F1 	*/
+    initscr();
+    cbreak();
+    keypad(stdscr, TRUE);
     noecho();
     curs_set(0);
     start_color();
     init_pair(1, COLOR_RED, COLOR_BLACK);
     init_pair(2, COLOR_GREEN, COLOR_BLACK);
 
-    start_y = (LINES - height) / 2;	/* Calculating for a center placement */
-    start_x = (COLS - width) / 2;	/* of the window		*/
+    start_y = (LINES - height) / 2;
+    start_x = (COLS - width) / 2;
 
     attron(COLOR_PAIR(1));
-       printw("Press q to exit");
-        refresh();
+    printw("Press q to exit");
+    refresh();
     attroff(COLOR_PAIR(1));
 
     field = crt_win( height,  width,  start_x,  start_y);
 
-    for (size_t i = 0; i < game.numPlayers * 2; i++) {
-        thd_cli[i].field = field;
-        pthread_create(&p_pos[i], NULL, thread_mgmt, &thd_cli[i]);
+
+    //for (size_t i = 0; i < game.numPlayers * 2; i++) {
+    //    thd_cli[i].field = field;
+      //  pthread_create(&p_pos[i], NULL, thread_mgmt, &thd_cli[i]);
+    //}
+
+    // READS FROM SRV ALL GAME PLAYER DATA
+    for(int i = 0; i < game.numPlayers * 2; i++)
+    {
+      read(cli_fd, &player_list[i], sizeof(cli_player_t));
+      //printf("INIT POSITIONS x:%d | y:%d\n", player_list[i].posX, player_list[i].posY );
+      thd_cli[i].p.x = player_list[i].posX;
+      thd_cli[i].p.y = player_list[i].posY;
+      thread_mgmt(field, player_list[i].posX, player_list[i].posY );
+
+    // LIST GAME
+    // CONNECT TO GAME: TEAM NUM, PLAYER NUM
     }
 
     do {
         FD_ZERO(&conj);
         FD_SET(0, &conj);
+        FD_SET(cli_fd,&conj);
+
         tempo.tv_sec = 1;
         tempo.tv_usec = 500000;
-        ret = select( 1, &conj, NULL, NULL , &tempo);
+        ret = select( cli_fd + 1, &conj, NULL, NULL , &tempo);
 
         if (ret > 0){
             if (FD_ISSET(0, &conj))
                 ch = getchar();
+            if (FD_ISSET(cli_fd, &conj)){
+              clean_pos(&field);
+              wrefresh(field);
+
+              for(int i = 0; i < game.numPlayers * 2; i++)
+              {
+                read(cli_fd, &player_list[i], sizeof(cli_player_t));
+                thd_cli[i].p.x = player_list[i].posX;
+                thd_cli[i].p.y = player_list[i].posY;
+                thread_mgmt(field, thd_cli[i].p.x, thd_cli[i].p.y );
+              }
+            //  for (size_t i = 0; i < game.numPlayers*2; i++)
+              //    pthread_join(p_pos[i], NULL);
+            }
+
         }else{
             clean_pos(&field);
             wrefresh(field);
         }
     } while( ch != 'q');
 
-    EXIT = 1;
-    for (size_t i = 0; i < game.numPlayers*2; i++)
-        pthread_join(p_pos[i], NULL);
+  //  EXIT = 1;
+    //for (size_t i = 0; i < game.numPlayers*2; i++)
+      //  pthread_join(p_pos[i], NULL);
   }
 
   // CLOSE FIFO CONNECTION
@@ -183,29 +202,31 @@ WINDOW* crt_win(int height, int width, int start_x, int start_y){
     wrefresh(game_field);
 
     return game_field;
-};
+}
 void move_pl(WINDOW* field, int y, int x){
     wattron(field,COLOR_PAIR(1));
     mvwprintw(field, y, x, "Y");
     wattroff(field,COLOR_PAIR(1));
-};
+}
+
 int rand_p(int min ,int max){
     return min + rand() % (max - min + 1);
 }
-void* thread_mgmt( void *p){
-    struct thread_data *data = (struct thread_data *) p;
 
-    do {
-        pthread_mutex_lock(&lock);
-        move_pl(data->field, data->p.y, data->p.x);
-        wrefresh(data->field);
-        pthread_mutex_unlock(&lock);
+void thread_mgmt( WINDOW * field, int x, int y){
+
+
+  //  do {
+    //    pthread_mutex_lock(&lock);
+        move_pl(field, y, x);
+        wrefresh(field);
+      //  pthread_mutex_unlock(&lock);
 
         //SPEED
-        sleep(1);
-    } while(!EXIT);
+        //sleep(1);
+    //} while(!EXIT);
 
-    pthread_exit(0);
+    //pthread_exit(0);
 }
 
 void clean_pos( WINDOW ** f){

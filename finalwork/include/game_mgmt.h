@@ -23,6 +23,15 @@ struct player_t
   player_t * next, * head;  // NEXT PLAYER PTR
 };
 
+// POSITION DATA STRUCT FOR CLIENT
+typedef struct data_player_t data_player_t;
+struct data_player_t
+{
+  player_t * player;
+  user_t * user_list;
+  data_player_t * next;
+};
+
 // GAME STRUCT
 typedef struct
 {
@@ -30,16 +39,10 @@ typedef struct
   int res[2];         // GAME RESULT
   int numPlayers;     // GAME PLAYER NUM
   player_t * p_list;  // GAME PLAYER LIST
+  data_player_t * data_player;
   pthread_t tid;      // TID FOR GAME FUNCTION
   void * retval;
 } game_t;
-
-// POSITION DATA STRUCT FOR CLIENT
-typedef struct
-{
-  player_t * player;
-  user_t * user_list;
-} data_cli_t;
 
 // CLIENT'S GAME STRUCT
 typedef struct
