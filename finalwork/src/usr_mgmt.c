@@ -156,7 +156,6 @@ void logout_user(user_t ** head, siginfo_t * cli, void * context)
 void exit_warning(user_t * list){
   while (list != NULL) {
     kill(list->pid, 10);
-    printf("sent %d\n", list->pid );
     list = list->next_usr;
   }
 }

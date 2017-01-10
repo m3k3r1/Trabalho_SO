@@ -4,12 +4,6 @@
 !_TAG_PROGRAM_NAME	Exuberant Ctags	//
 !_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
 !_TAG_PROGRAM_VERSION	5.9~svn20110310	//
-getNumPlayers	/home/h3x/Projects/Trabalho_SO/finalwork/src/game_mgmt.c	/^void getNumPlayers(int * numDef, int * numOff)$/;"	function	line:6	signature:(int * numDef, int * numOff)
-initPlayers	/home/h3x/Projects/Trabalho_SO/finalwork/src/game_mgmt.c	/^void initPlayers(game_t * game, int numDef, int numOff)$/;"	function	line:26	signature:(game_t * game, int numDef, int numOff)
-set_game	/home/h3x/Projects/Trabalho_SO/finalwork/src/game_mgmt.c	/^void set_game(game_t * game, int sec)$/;"	function	line:114	signature:(game_t * game, int sec)
-init_random_gen	/home/h3x/Projects/Trabalho_SO/finalwork/src/game_mgmt.c	/^void init_random_gen()$/;"	function	line:134
-randNum	/home/h3x/Projects/Trabalho_SO/finalwork/src/game_mgmt.c	/^int randNum(int min, int max)$/;"	function	line:140	signature:(int min, int max)
-moveCheck	/home/h3x/Projects/Trabalho_SO/finalwork/src/game_mgmt.c	/^int moveCheck(int x, int y, player_t * head)$/;"	function	line:146	signature:(int x, int y, player_t * head)
-movePlayer	/home/h3x/Projects/Trabalho_SO/finalwork/src/game_mgmt.c	/^void movePlayer(player_t * player)$/;"	function	line:162	signature:(player_t * player)
-playerMovement	/home/h3x/Projects/Trabalho_SO/finalwork/src/game_mgmt.c	/^void * playerMovement(void * arg)$/;"	function	line:184	signature:(void * arg)
-runGame	/home/h3x/Projects/Trabalho_SO/finalwork/src/game_mgmt.c	/^void * runGame(void * arg)$/;"	function	line:241	signature:(void * arg)
+crt_win	/home/h3x/Projects/Trabalho_SO/finalwork/src/usr_ui.c	/^WINDOW* crt_win(int height, int width, int start_x, int start_y){$/;"	function	line:4	signature:(int height, int width, int start_x, int start_y)
+render_players	/home/h3x/Projects/Trabalho_SO/finalwork/src/usr_ui.c	/^void render_players( WINDOW * field, int x, int y, int color,int role){$/;"	function	line:16	signature:( WINDOW * field, int x, int y, int color,int role)
+clean_pos	/home/h3x/Projects/Trabalho_SO/finalwork/src/usr_ui.c	/^void clean_pos( WINDOW ** f){$/;"	function	line:24	signature:( WINDOW ** f)

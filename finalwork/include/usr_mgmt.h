@@ -12,7 +12,6 @@ typedef struct
   bool auth;
 } login_t;
 
-
 // SERVER FUNCTIONS
 int list_player(user_t * head);
 void sign_up(char* new_usr, char* new_pwd, char* file_name, bool custom_file);
@@ -24,7 +23,6 @@ bool usr_auth(char usr[20], char pss[20], char * file_name, bool custom_file);
 void logout_user(user_t ** head, siginfo_t * cli, void * context);
 void exit_warning(user_t * list);
 void write_game_cli(user_t * list, game_t * game);
-void write_to_clients(user_t * list, bool gamestart);
 
 // CLIENT FUNCTIONS
 // READS CLIENT CREDS

@@ -17,7 +17,6 @@ int main(int argc, char const *argv[]) {
   login_t cli_log;            // USER CREDENTIALS
   pid_t cli_pid;              // CLIENT PID
   WINDOW * field;
-  struct thread_data *thd_cli = NULL;
   cli_game_t game;
   cli_player_t * player_list = NULL;
   // CLIENT AUTH BOOL
@@ -77,9 +76,6 @@ int main(int argc, char const *argv[]) {
 
     // CLI PLAYER STRUCT MALLOC
     player_list = malloc(sizeof(cli_player_t) * game.numPlayers*2);
-    thd_cli = malloc(sizeof(struct thread_data) * game.numPlayers*2);
-
-
 
     fd_set conj;
     struct timeval tempo;
@@ -124,8 +120,6 @@ int main(int argc, char const *argv[]) {
               for(int i = 0; i < game.numPlayers * 2; i++)
               {
                 read(cli_fd, &player_list[i], sizeof(cli_player_t));
-                thd_cli[i].p.x = player_list[i].posX;
-                thd_cli[i].p.y = player_list[i].posY;
 
                 if (i <= game.numPlayers)
                   color = 1;
@@ -146,11 +140,7 @@ int main(int argc, char const *argv[]) {
 
 
   //free
-
-    free(player_list);
-    free(thd_cli);
-
-
+  free(player_list);
 
   // CLOSE FIFO CONNECTION
   close(cli_fd);

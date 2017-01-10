@@ -18,12 +18,6 @@
 #define SRV_FIFO "res/server_fifo"
 #define CLI_FIFO "res/client_%d_fifo"
 
-typedef struct
-{
-  pid_t pid;
-} cli_info_t;
-
 void cmd_control(char *cmd, char* arg1, char* arg2);
 
-void signal_handler_srv(int sig);
 #endif

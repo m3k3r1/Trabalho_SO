@@ -1,5 +1,8 @@
 #include "base.h"
 #include "usr_mgmt.h"
+
+void signal_handler_srv(int sig);
+
 bool srv_shutdown = false;
 
 int main(int argc, char const *argv[])
@@ -82,8 +85,11 @@ int main(int argc, char const *argv[])
           list_player(user_list);
 
         // SIGN UP USER
-        if (!strcmp(cmd, "user"))
+        if (!strcmp(cmd, "user") &&
+        strcmp(arg1, " ") && strlen(arg1) > 0 &&
+        strcmp(arg2, " ") && strlen(arg2) > 0)
           sign_up(arg1, arg2,file_name, custom_login_file);
+        else
 
         // START GAME
         if(!strcmp(cmd, "start") && strlen(arg1) > 0)
@@ -141,39 +147,7 @@ int main(int argc, char const *argv[])
 
             curr_player_data = curr_player_data->next;
           }
-/*
-          while (list) {
-            sprintf(cli_pipe_name , CLI_FIFO, list->pid);
-            cli_fd = open(cli_pipe_name, O_WRONLY|O_CREAT, 0600);
 
-            int i = 0;
-
-            c_game.seconds = game_tmp.seconds;
-            c_game.numPlayers = game_tmp.numPlayers;
-            for (size_t x = 0; x < 2; x++) {
-              c_game.res[i] = game.res[i];
-            }
-
-            write(cli_fd, &c_game, sizeof(c_game));
-
-
-            while (i != 10) {
-              player.posX = game_tmp.p_list->posX;
-              player.posY = game_tmp.p_list->posY;
-              player.role = game_tmp.p_list->role;
-              player.id = game_tmp.p_list->id;
-
-                write(cli_fd, &player, sizeof(player));
-              i++;
-
-              game_tmp.p_list = game_tmp.p_list->next;
-            }
-
-
-
-            list= list->next_usr;
-          }
-          */
           pthread_join(game.tid, &(game.retval));
 
         }
@@ -223,10 +197,6 @@ int main(int argc, char const *argv[])
     }
   //} while(strcmp(cmd, "shutdown") && !srv_shutdown);
   } while(strcmp(cmd, "shutdown"));
-
-  // SEND 0 BYTES TO CLIENT SO HE CAN GET THE FUCK OUT OF THE READ
-  if(!strcmp(cmd, "shutdown"))
-    //write_game_cli(user_list, NULL);
 
   // WARN USERS SERVER GOING TO SHUTDOWN
   exit_warning(user_list);
